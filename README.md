@@ -1,6 +1,5 @@
-<p align="center">
-  <img src="https://avatars2.githubusercontent.com/u/71708563?s=200&v=4">
-</p>
+![Binflux-Netty](binflux-netty.png)
+
 Binflux-Netty allows the use of different serialization libraries 
 to automatically and efficiently transfer object graphs across the network by using [Netty](http://netty.io/).
 The [original project](https://github.com/EsotericSoftware/kryonetty) was a fork of 

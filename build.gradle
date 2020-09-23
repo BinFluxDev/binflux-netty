@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'eu.binflux'
-version '1.0'
+version '1.1.2-release'
 
 repositories {
     mavenCentral()

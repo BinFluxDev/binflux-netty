@@ -7,6 +7,9 @@ version '1.0'
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://jitpack.io"
+    }
 }
 
 dependencies {
@@ -18,7 +21,8 @@ dependencies {
     compile group: 'io.netty', name: 'netty-transport-native-epoll', version: '4.1.51.Final'
     compile group: 'io.netty', name: 'netty-handler', version: '4.1.51.Final'
 
+    compile group: 'com.caucho', name: 'hessian', version: '4.0.38'
+    compile group: 'com.github.romix', name: 'quickser', version: 'master-SNAPSHOT'
     compile group: 'de.ruedigermoeller', name: 'fst', version: '2.56'
-
     compile group: 'com.esotericsoftware', name: 'kryo', version: '5.0.0-RC9'
 }

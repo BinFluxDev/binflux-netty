@@ -28,4 +28,5 @@ public class RandomRequest implements Serializable {
 	public byte[] getTestBytes() {
 		return testBytes;
 	}
+
 }

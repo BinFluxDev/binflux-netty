@@ -19,10 +19,6 @@ import java.util.concurrent.Executors;
 
 public class EndpointClient extends AbstractClient {
 
-    public static EndpointClient newInstance(EndpointBuilder builder, String host, int port) {
-        return new EndpointClient(builder, host, port);
-    }
-
     private final ExecutorService executor;
 
     private final EventLoopGroup group;
@@ -31,7 +27,7 @@ public class EndpointClient extends AbstractClient {
     private String host;
     private int port;
 
-    protected EndpointClient(EndpointBuilder endpointBuilder, String host, int port) {
+    public EndpointClient(EndpointBuilder endpointBuilder, String host, int port) {
         super(endpointBuilder);
 
         this.host = host;

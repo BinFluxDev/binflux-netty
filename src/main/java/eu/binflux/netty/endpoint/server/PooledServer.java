@@ -20,10 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PooledServer extends AbstractServer {
 
-    public static PooledServer newInstance(EndpointBuilder builder, int port, int poolSize) {
-        return new PooledServer(builder, port, poolSize);
-    }
-
     private final ServerBootstrap bootstrap;
     private final EventLoopGroup bossGroup;
     private final EventLoopGroup workerGroup;
@@ -31,7 +27,7 @@ public class PooledServer extends AbstractServer {
     private int poolSize;
     private int port;
 
-    private PooledServer(EndpointBuilder endpointBuilder, int port, int poolSize) {
+    public PooledServer(EndpointBuilder endpointBuilder, int port, int poolSize) {
         super(endpointBuilder);
 
         this.poolSize = poolSize;

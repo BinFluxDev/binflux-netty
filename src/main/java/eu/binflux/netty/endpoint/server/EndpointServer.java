@@ -17,17 +17,13 @@ import java.net.InetSocketAddress;
 
 public class EndpointServer extends AbstractServer {
 
-    public static EndpointServer newInstance(EndpointBuilder builder, int port) {
-        return new EndpointServer(builder, port);
-    }
-
     private final ServerBootstrap serverBootstrap;
     private final EventLoopGroup bossGroup;
     private final EventLoopGroup workerGroup;
     private Channel channel;
     private int port;
 
-    private EndpointServer(EndpointBuilder endpointBuilder, int port) {
+    public EndpointServer(EndpointBuilder endpointBuilder, int port) {
         super(endpointBuilder);
 
         this.port = port;

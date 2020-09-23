@@ -1,19 +1,24 @@
 
-package test;
+package test.serializer;
 
-import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
+import eu.binflux.netty.endpoint.EndpointBuilder;
 import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
+import eu.binflux.netty.serialization.serializer.FSTSerializer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import test.RandomRequest;
+import test.StaticTest;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
-public class StringTest extends AbstractBenchmark {
+public class FSTSerializerTest {
+
+    public static EndpointBuilder BUILDER;
 
     public static AbstractServer server;
     public static AbstractClient client;
@@ -23,9 +28,13 @@ public class StringTest extends AbstractBenchmark {
 
     @BeforeClass
     public static void setupClass() {
-        System.out.println("== Test String/Sec Behaviour == ");
+        System.out.println("== Test FSTSerializer Behaviour == ");
 
-        server = StaticTest.BUILDER.build(54321);
+        BUILDER = EndpointBuilder.newBuilder()
+                .eventExecutor(5)
+                .serializer(new FSTSerializer());
+
+        server = BUILDER.build(54321);
 
         server.eventHandler().registerConsumer(ReceiveEvent.class, event -> {
             if(event.getObject() instanceof RandomRequest) {
@@ -37,7 +46,7 @@ public class StringTest extends AbstractBenchmark {
             }
         });
 
-        client = StaticTest.BUILDER.build("localhost", 54321, 5);
+        client = BUILDER.build("localhost", 54321, 5);
 
         average = new AtomicInteger();
         counter = new AtomicInteger();
@@ -52,7 +61,7 @@ public class StringTest extends AbstractBenchmark {
         assertTrue(client.stop());
         assertTrue(server.stop());
         System.out.println(average.get() + " packets/sec in average");
-        System.out.println("== Finished String/Sec Behaviour == ");
+        System.out.println("== Finished FSTSerializer Behaviour == ");
     }
 
     @Test

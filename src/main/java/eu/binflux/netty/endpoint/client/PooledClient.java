@@ -16,10 +16,6 @@ import java.util.concurrent.*;
 
 public class PooledClient extends AbstractClient {
 
-    public static PooledClient newInstance(EndpointBuilder builder, String host, int port, int poolSize) {
-        return new PooledClient(builder, host, port, poolSize);
-    }
-
     private final ExecutorService executor;
 
     private final EventLoopGroup eventLoopGroup;
@@ -31,7 +27,7 @@ public class PooledClient extends AbstractClient {
     private final Set<Channel> activeConnectionSet;
     private final BlockingQueue<Channel> freeConnectionDeque;
 
-    protected PooledClient(EndpointBuilder endpointBuilder, String host, int port, int poolSize) {
+    public PooledClient(EndpointBuilder endpointBuilder, String host, int port, int poolSize) {
         super(endpointBuilder);
 
         // Set final fields

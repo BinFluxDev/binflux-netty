@@ -128,19 +128,19 @@ public final class EndpointBuilder {
         return this.serializer;
     }
 
-    public EndpointClient buildClient(String host, int port) {
-        return EndpointClient.newInstance(this, host, port);
+    public EndpointClient build(String host, int port) {
+        return new EndpointClient(this, host, port);
     }
 
-    public EndpointServer buildServer(int port) {
-        return EndpointServer.newInstance(this, port);
+    public EndpointServer build(int port) {
+        return new EndpointServer(this, port);
     }
 
-    public PooledClient buildPooledClient(String host, int port, int poolSize) {
-        return PooledClient.newInstance(this, host, port, poolSize);
+    public PooledClient build(String host, int port, int poolSize) {
+        return new PooledClient(this, host, port, poolSize);
     }
 
-    public PooledServer buildPooledServer(int port, int poolSize) {
-        return PooledServer.newInstance(this, port, poolSize);
+    public PooledServer build(int port, int poolSize) {
+        return new PooledServer(this, port, poolSize);
     }
 }

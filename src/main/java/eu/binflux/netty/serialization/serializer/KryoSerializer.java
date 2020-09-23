@@ -58,7 +58,7 @@ public class KryoSerializer implements ISerializer {
     }
 
     @Override
-    public <T> byte[] serialize(Object object) {
+    public <T> byte[] serialize(T object) {
         Kryo kryo = kryoPool.obtain();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Output output = outputPool.obtain();

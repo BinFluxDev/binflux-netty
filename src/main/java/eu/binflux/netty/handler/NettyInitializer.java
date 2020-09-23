@@ -47,13 +47,13 @@ public class NettyInitializer extends ChannelInitializer<SocketChannel> {
 
         // TODO: Add more serializer-options
         // Add the kryo ByteToMessageCodec<Object>
-        pipeline.addLast("kryo-codec", new NettyCodec(endpoint));
+        pipeline.addLast("netty-codec", new NettyCodec(endpoint));
 
         // Add the business-logic handler. (async or async)
         // And let it execute by DefaultEventExecutorGroup if is set
         if (endpoint.builder().isEventExecutor())
-            pipeline.addLast(executorGroup, "kryo-handler", new NettyHandler(endpoint));
+            pipeline.addLast(executorGroup, "netty-handler", new NettyHandler(endpoint));
         else
-            pipeline.addLast("kryo-handler", new NettyHandler(endpoint));
+            pipeline.addLast("netty-handler", new NettyHandler(endpoint));
     }
 }

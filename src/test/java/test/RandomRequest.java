@@ -1,6 +1,8 @@
 package test;
 
-public class RandomRequest {
+import java.io.Serializable;
+
+public class RandomRequest implements Serializable {
 
 	String testString;
 	long testLong;

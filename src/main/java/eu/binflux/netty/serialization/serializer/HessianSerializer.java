@@ -3,13 +3,13 @@ package eu.binflux.netty.serialization.serializer;
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import eu.binflux.netty.exceptions.SerializerException;
-import eu.binflux.netty.serialization.ISerializer;
+import eu.binflux.netty.serialization.Serializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
-public class HessianSerializer implements ISerializer {
+public class HessianSerializer implements Serializer {
 
     @Override
     public <T> byte[] serialize(T object) {

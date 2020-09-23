@@ -2,12 +2,18 @@ package eu.binflux.netty.serialization.serializer;
 
 import eu.binflux.netty.exceptions.SerializerException;
 import eu.binflux.netty.serialization.Serializer;
-import org.nustaq.serialization.FSTObjectInput;
-import org.nustaq.serialization.FSTObjectOutput;
+import org.mapdb.elsa.ElsaMaker;
+import org.mapdb.elsa.ElsaSerializerPojo;
 
 import java.io.*;
 
-public class FSTSerializer implements Serializer {
+public class ElsaSerializer implements Serializer {
+
+    private final ElsaSerializerPojo elsaSerializer;
+
+    public ElsaSerializer() {
+        this.elsaSerializer = new ElsaMaker().make();
+    }
 
     @Override
     public <T> byte[] serialize(T object) {
@@ -15,8 +21,8 @@ public class FSTSerializer implements Serializer {
             if(!(object instanceof Serializable))
                 throw new SerializerException("Object doesn't implement Serializable");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            FSTObjectOutput output = new FSTObjectOutput(outputStream);
-            output.writeObject(object);
+            DataOutputStream output = new DataOutputStream(outputStream);
+            elsaSerializer.serialize(output, object);
             output.flush();
             output.close();
             return outputStream.toByteArray();
@@ -30,9 +36,9 @@ public class FSTSerializer implements Serializer {
     public <T> T deserialize(byte[] bytes) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-            FSTObjectInput input = new FSTObjectInput(inputStream);
+            DataInputStream input = new DataInputStream(inputStream);
             @SuppressWarnings("unchecked")
-            T object = (T) input.readObject();
+            T object = (T) elsaSerializer.deserialize(input);
             input.close();
             return object;
         } catch (Exception e) {

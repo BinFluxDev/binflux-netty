@@ -4,7 +4,7 @@ import eu.binflux.netty.endpoint.client.EndpointClient;
 import eu.binflux.netty.endpoint.server.EndpointServer;
 import eu.binflux.netty.endpoint.client.PooledClient;
 import eu.binflux.netty.endpoint.server.PooledServer;
-import eu.binflux.netty.serialization.ISerializer;
+import eu.binflux.netty.serialization.Serializer;
 import eu.binflux.netty.serialization.serializer.KryoSerializer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -26,7 +26,7 @@ public final class EndpointBuilder {
     private final AtomicInteger serverBossSize;
     private final AtomicInteger serverWorkerSize;
 
-    private ISerializer serializer;
+    private Serializer serializer;
 
     private EndpointBuilder() {
         this.logging = new AtomicBoolean(false);
@@ -83,7 +83,7 @@ public final class EndpointBuilder {
         return this;
     }
 
-    public EndpointBuilder serializer(ISerializer serializer) {
+    public EndpointBuilder serializer(Serializer serializer) {
         this.serializer = serializer;
         return this;
     }
@@ -124,7 +124,7 @@ public final class EndpointBuilder {
         return this.serverBossSize.get();
     }
 
-    public ISerializer getSerializer() {
+    public Serializer getSerializer() {
         return this.serializer;
     }
 

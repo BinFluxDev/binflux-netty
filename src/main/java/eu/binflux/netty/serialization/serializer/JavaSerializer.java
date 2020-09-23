@@ -1,11 +1,11 @@
 package eu.binflux.netty.serialization.serializer;
 
 import eu.binflux.netty.exceptions.SerializerException;
-import eu.binflux.netty.serialization.ISerializer;
+import eu.binflux.netty.serialization.Serializer;
 
 import java.io.*;
 
-public class JavaSerializer implements ISerializer {
+public class JavaSerializer implements Serializer {
 
     @Override
     public <T> byte[] serialize(T object) {

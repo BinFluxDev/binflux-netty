@@ -1,8 +1,8 @@
 package eu.binflux.netty.serialization.serializer;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.unsafe.UnsafeInput;
+import com.esotericsoftware.kryo.unsafe.UnsafeOutput;
 import com.esotericsoftware.kryo.util.Pool;
 import eu.binflux.netty.serialization.Serializer;
 import org.objenesis.strategy.StdInstantiatorStrategy;
@@ -10,21 +10,21 @@ import org.objenesis.strategy.StdInstantiatorStrategy;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-public class KryoSerializer implements Serializer {
+public class KryoUnsafeSerializer implements Serializer {
 
     private static final int DEFAULT_INPUT_BUFFER_SIZE = 262144;
     private static final int DEFAULT_OUTPUT_BUFFER_SIZE = 262144;
     private static final int DEFAULT_MAX_OUTPUT_BUFFER_SIZE = 524288;
 
     private final Pool<Kryo> kryoPool;
-    private final Pool<Input> inputPool;
-    private final Pool<Output> outputPool;
+    private final Pool<UnsafeInput> inputPool;
+    private final Pool<UnsafeOutput> outputPool;
 
-    public KryoSerializer() {
+    public KryoUnsafeSerializer() {
         this(DEFAULT_INPUT_BUFFER_SIZE, DEFAULT_OUTPUT_BUFFER_SIZE, DEFAULT_MAX_OUTPUT_BUFFER_SIZE);
     }
 
-    public KryoSerializer(int inputBufferSize, int outputBufferSize, int maxOutputSize) {
+    public KryoUnsafeSerializer(int inputBufferSize, int outputBufferSize, int maxOutputSize) {
 
         // Initialize Kryo-Pool
         kryoPool = new Pool<Kryo>(true, true) {
@@ -41,18 +41,18 @@ public class KryoSerializer implements Serializer {
         };
 
         // Initialize Input-Pool
-        inputPool = new Pool<Input>(true, true) {
+        inputPool = new Pool<UnsafeInput>(true, true) {
             @Override
-            protected Input create() {
-                return new Input(inputBufferSize);
+            protected UnsafeInput create() {
+                return new UnsafeInput(inputBufferSize);
             }
         };
 
         // Initialize Output-Pool
-        outputPool = new Pool<Output>(true, true) {
+        outputPool = new Pool<UnsafeOutput>(true, true) {
             @Override
-            protected Output create() {
-                return new Output(outputBufferSize, maxOutputSize);
+            protected UnsafeOutput create() {
+                return new UnsafeOutput(outputBufferSize, maxOutputSize);
             }
         };
     }
@@ -61,7 +61,7 @@ public class KryoSerializer implements Serializer {
     public <T> byte[] serialize(T object) {
         Kryo kryo = kryoPool.obtain();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        Output output = outputPool.obtain();
+        UnsafeOutput output = outputPool.obtain();
         output.setOutputStream(outputStream);
         kryo.writeClassAndObject(output, object);
         output.flush();
@@ -75,7 +75,7 @@ public class KryoSerializer implements Serializer {
     public <T> T deserialize(byte[] bytes) {
         Kryo kryo = kryoPool.obtain();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-        Input input = inputPool.obtain();
+        UnsafeInput input = inputPool.obtain();
         input.setInputStream(inputStream);
         @SuppressWarnings("unchecked")
         T object = (T) kryo.readClassAndObject(input);

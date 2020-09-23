@@ -2,12 +2,14 @@ package eu.binflux.netty.serialization.serializer;
 
 import eu.binflux.netty.exceptions.SerializerException;
 import eu.binflux.netty.serialization.Serializer;
-import org.nustaq.serialization.FSTObjectInput;
-import org.nustaq.serialization.FSTObjectOutput;
+import org.nustaq.serialization.FSTObjectInputNoShared;
+import org.nustaq.serialization.FSTObjectOutputNoShared;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 
-public class FSTSerializer implements Serializer {
+public class FSTNoSharedSerializer implements Serializer {
 
     @Override
     public <T> byte[] serialize(T object) {
@@ -15,7 +17,7 @@ public class FSTSerializer implements Serializer {
             if(!(object instanceof Serializable))
                 throw new SerializerException("Object doesn't implement Serializable");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            FSTObjectOutput output = new FSTObjectOutput(outputStream);
+            FSTObjectOutputNoShared output = new FSTObjectOutputNoShared(outputStream);
             output.writeObject(object);
             output.flush();
             output.close();
@@ -30,7 +32,7 @@ public class FSTSerializer implements Serializer {
     public <T> T deserialize(byte[] bytes) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-            FSTObjectInput input = new FSTObjectInput(inputStream);
+            FSTObjectInputNoShared input = new FSTObjectInputNoShared(inputStream);
             @SuppressWarnings("unchecked")
             T object = (T) input.readObject();
             input.close();

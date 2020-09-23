@@ -53,7 +53,6 @@ public class KryoSerializerTest {
 
         assertTrue(server.start());
         assertTrue(client.start());
-
     }
 
     @AfterClass

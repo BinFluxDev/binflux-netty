@@ -53,7 +53,6 @@ public class HessianSerializerTest {
 
         assertTrue(server.start());
         assertTrue(client.start());
-
     }
 
     @AfterClass

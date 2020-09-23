@@ -53,7 +53,6 @@ public class FSTSerializerTest {
 
         assertTrue(server.start());
         assertTrue(client.start());
-
     }
 
     @AfterClass

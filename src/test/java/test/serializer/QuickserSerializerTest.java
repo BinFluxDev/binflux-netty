@@ -53,7 +53,6 @@ public class QuickserSerializerTest {
 
         assertTrue(server.start());
         assertTrue(client.start());
-
     }
 
     @AfterClass

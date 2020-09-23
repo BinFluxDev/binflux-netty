@@ -3,7 +3,7 @@ package eu.binflux.netty.endpoint;
 
 import eu.binflux.netty.eventhandler.EventHandler;
 
-public abstract class AbstractEndpoint implements IEndpoint {
+public abstract class AbstractEndpoint implements Endpoint {
 
 	private final EndpointBuilder endpointBuilder;
 	private final EventHandler eventHandler;

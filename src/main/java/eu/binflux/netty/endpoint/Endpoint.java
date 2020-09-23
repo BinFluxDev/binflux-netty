@@ -2,7 +2,7 @@ package eu.binflux.netty.endpoint;
 
 import eu.binflux.netty.eventhandler.EventHandler;
 
-public interface IEndpoint {
+public interface Endpoint {
 
     /**
      * @return Returns the Endpoint-Options instance

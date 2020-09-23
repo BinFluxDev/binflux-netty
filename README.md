@@ -10,41 +10,44 @@ Simply explained: Send (almost) every object back and forth between client or se
 
 ## Overview
 
+This overview offers a simple step by step guide to get started with binflux-netty.
+
 * [EndpointBuilder](#what-is-the-endpointbuilder)
 * [Serialization](#serialization)
+* [Build Endpoints](#building-the-endpoints)
 * [Server](#how-to-start-the-server)
 * [Client](#how-to-start-the-client)
-* [Reconnect](#reconnecting-with-client)
+* [Reconnect](#reconnecting-with-endpointclient)
 * [Channel-Pool](#connection-pooling)
 * [Default Events](#default-events)
 * [Register Events](#register-events)
 * [Create Events](#creating-events)
 * [Handle Events](#throwing-and-consuming-events)
+* [Custom Serializer](#custom-serializers)
 * [Download](#add-as-dependecy)
 * [Build From Source](#build-from-source)
 
 
 ## What is the EndpointBuilder
-`EndpointBuilder` passes the options to the endpoints. 
+`EndpointBuilder.class` - passes options to endpoints. 
 
 #### Basic options:
 * `logging(boolean value)` 
-    * enables/disables usage of `LoggingHandler.class` (helpful for debugging)
-    * default: false
-* `eventExecutor(int size)` 
-    * enables usage of `EventExecutorGroup.class`
-    * sets threads of `EventExecutorGroup.class` 
-    * default: false / 0
+    * enables/disables netty-built-in `LoggingHandler.class` (helpful for debugging)
+    * default: disabled
+* `eventExecutor(int threadPoolSize)` 
+    * enables `EventExecutorGroup.class`
+    * thread-pool-size * cores
+    * default: disabled
     
 `eventExecutor` allow asynchronous processing of the handler on client & server side and its size. 
 
 #### IdleState options:
 * `idleState(int readTimeout, int writeTimeout)`
     * enables initialization of `KryoNettyIdleHandler.class`
-    * default: false
-    * extra: 0 = disabled
+    * default: disabled 
     * default-write-time: 15
-    * default-read-time: 0
+    * default-read-time: 0 (= disabled)
 
 What does mean `ReadTimeout` and `WriteTimeout`?
 
@@ -57,7 +60,7 @@ from the server to the client, a ReadTimeout is thrown.
 * `WriteTimeout`
     * default-action: `int 1` is sent after timeout.
 * `ReadTimeout`
-    * default-action: no further action
+    * default-action: no action
 
 (Note: only the client throws this events.)
 
@@ -79,43 +82,43 @@ If you have no idea what you are doing with this, you should leave it set by def
     * sets the specific `ISerializer`
     * default: `KryoSerializer` (class-independent)
 
-## Building the endpoints:
-
-Client:
-* `build(String host, int port)`
-    * Endpoint: `EndpointClient`
-* `build(String host, int port, int poolSize)`
-    * Endpoint: `PooledClient`
-    
-Server:
-* `build(int port)`
-    * Endpoint: `EndpointServer`
-* `build(int port, int poolSize)`
-    * Endpoint: `PooledServer`
-
-
 ## Serialization
 
-Currently there are 3 serializers:
+Default Serializers:
 
-* `KryoSerializer` 
+* `KryoSerializer` ( + `KryoUnsafeSerializer`)
     * Link: [Kryo](https://github.com/EsotericSoftware/kryo)
     * Requirement: None
-    * Optional: `KryoSerializer(int inputSize, int outputSize, int maxOutputSize)`
+    * (optional) constructor: `KryoSerializer(int inputSize, int outputSize, int maxOutputSize)`
 * `JavaSerializer`
     * Link: [Java](https://docs.oracle.com/javase/tutorial/jndi/objects/serial.html#:~:text=To%20serialize%20an%20object%20means,interface%20or%20its%20subinterface%2C%20java.)
-    * Requirement: Must implement `Serializable`
-* `FSTSerializer`
+    * Requirement: Implement `Serializable`
+* `FSTSerializer` ( + `FSTNoSharedSerializer`)
     * Link: [fast-serialization](https://github.com/RuedigerMoeller/fast-serialization)
-    * Requirement: Must implement `Serializable`
+    * Requirement: Implement `Serializable`
 * `HessianSerializer`
     * Link: [Hessian](http://hessian.caucho.com/)
     * Requirement: None
 * `QuickserSerializer`
     * Link: [QuickSer](https://github.com/romix/quickser)
     * Requirement: None
-    
+* `ElsaSerializer`
+    * Link: [Elsa](http://www.mapdb.org/)
+    * Requirement: None
 
+## Building the endpoints:
+
+To build the client:
+* `build(String host, int port)`
+    * Endpoint: `EndpointClient`
+* `build(String host, int port, int poolSize)`
+    * Endpoint: `PooledClient`
+    
+To build the server:
+* `build(int port)`
+    * Endpoint: `EndpointServer`
+* `build(int port, int poolSize)`
+    * Endpoint: `PooledServer`
 
 ## How to start the server
 
@@ -137,20 +140,26 @@ The `EndpointClient` works quite similar to the `EndpointServer`, just call `sta
 ```
 
 
-## Reconnecting with `Client`
+## Reconnecting with EndpointClient
 
-If you wanted to reconnect a `Client`, you can do it by that way:
+If you want to reconnect a `EndpointClient`, do this:
 
+* Connect Endpoint
 ```java
-    EndpointClient client = builder.build("localhost", 56566);
+    EndpointClient client = builder.build("localhost", 54321);
     client.start(); 
-    // Client is now connected, so close Channel with:
+```
+* Close it - not `stop()`
+```java
     client.close();
-    String newHost = "localhost";
-    int newPort = 54322;
-    // Change connect-address with:
-    client.setAddress(newHost, newPort);
-    // Client is now disconnected, so reconnect with:
+```
+
+* (optional) Change address
+```java
+    client.setAddress("localhost", 12345);
+```
+* Start again
+```java
     client.start();
 ```
 
@@ -214,7 +223,7 @@ The event system is completely `Consumer<T>` based. There are some default event
 
 ## Register Events
 
-To register an `ConsumerEvent` by using a `Consumer<? extends ConsumerEvent>`:
+To register an `ConsumerEvent` by using a `Consumer<ConnectEvent>`:
 
 ```java
     public class ConnectionConsumer implements Consumer<ConnectEvent> {
@@ -224,9 +233,12 @@ To register an `ConsumerEvent` by using a `Consumer<? extends ConsumerEvent>`:
             System.out.println("Server: Client connected: " + ctx.channel().remoteAddress());
         }
     }
+```
 
-    // To register an event to an endpoint
-    server.eventHandler().registerConsumer(ConnectEvent.class, new ConnectionConsumer());
+To register an event to an endpoint
+
+```java
+server.eventHandler().registerConsumer(ConnectEvent.class, new ConnectionConsumer());
 ```
 
 The register method expects this arguments:
@@ -304,16 +316,34 @@ public class SampleEvent implements ConsumerEvent {
 
 To call the consumers of the event, you can pass the event to the `EventHandler` in an `AbstractEndpoint`.
 
-Throw the event:
+To throw the event:
 ```java
 endpoint.eventHandler().handleEvent(new SampleEvent("SampleString", 100, System.currentTimeMillis()));
 ```
 
-Consume the event:
+To consume the event:
 ```java
 endpoint.eventHandler().registerConsumer(SampleEvent.class, (event) -> System.out.println(event.toString()));
 ```
 
+## Custom Serializers
+
+To create a `Serializer` implement the interface. 
+
+```java
+    public class CustomSerializer implements Serializer {
+        
+            @Override
+            public <T> byte[] serialize(T object) {
+                // Serializer here
+            }
+
+            @Override
+            public <T> T deserialize(byte[] bytes) {
+                // Deserializer here
+            }
+    } 
+```
 
 ### Add as dependecy
 

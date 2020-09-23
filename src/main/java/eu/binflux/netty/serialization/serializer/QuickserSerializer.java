@@ -2,11 +2,11 @@ package eu.binflux.netty.serialization.serializer;
 
 import com.romix.quickser.Serialization;
 import eu.binflux.netty.exceptions.SerializerException;
-import eu.binflux.netty.serialization.ISerializer;
+import eu.binflux.netty.serialization.Serializer;
 
 import java.io.Serializable;
 
-public class QuickserSerializer implements ISerializer {
+public class QuickserSerializer implements Serializer {
 
     private final Serialization serialization;
 

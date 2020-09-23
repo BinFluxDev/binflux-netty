@@ -53,7 +53,6 @@ public class JavaSerializerTest {
 
         assertTrue(server.start());
         assertTrue(client.start());
-
     }
 
     @AfterClass

@@ -25,7 +25,7 @@ _____________________
 ### What is the EndpointBuilder
 `EndpointBuilder` passes the options to the endpoints. 
 
-Basic-options:
+#### Basic options:
 * `logging(boolean value)` 
     * enables/disables usage of `LoggingHandler.class` (helpful for debugging)
     * default: false
@@ -35,8 +35,8 @@ Basic-options:
     * default: false / 0
     
 `eventExecutor` allow asynchronous processing of the handler on client & server side and its size. 
-_____________________
-IdleState-options:
+
+#### IdleState options:
 * `idleState(int readTimeout, int writeTimeout)`
     * enables initialization of `KryoNettyIdleHandler.class`
     * default: false
@@ -58,8 +58,8 @@ from the server to the client, a ReadTimeout is thrown.
     * default-action: no further action
 
 (Note: only the client throws this events.)
-_____________________
-Netty-options:
+
+#### Netty options:
 * `clientWorkerSize(int workerSize)` 
     * sets the threads per core to worker-group of the client 
     * default: 2 
@@ -71,21 +71,21 @@ Netty-options:
     * default: 5 
     
 If you have no idea what you are doing with this, you should leave it set by default.
-_____________________
-Serializer-options:
+
+#### Serializer options:
 * `serializer(ISerializer serializer)` 
     * sets the specific `ISerializer`
     * default: `KryoSerializer` (class-independent)
-_____________________
-Building the various endpoints:
 
-Client:
+#### Building the various endpoints:
+
+##### Client:
 * `build(String host, int port)`
     * Endpoint: `EndpointClient`
 * `build(String host, int port, int poolSize)`
     * Endpoint: `PooledClient`
     
-Server:
+##### Server:
 * `build(int port)`
     * Endpoint: `EndpointServer`
 * `build(int port, int poolSize)`

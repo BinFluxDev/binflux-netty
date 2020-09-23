@@ -38,7 +38,7 @@ public final class EndpointBuilder {
         this.readTimeout = new AtomicInteger(0);
         this.writeTimeout = new AtomicInteger(0);
 
-        this.clientWorkerSize = new AtomicInteger(5);
+        this.clientWorkerSize = new AtomicInteger(2);
 
         this.serverBossSize = new AtomicInteger(1);
         this.serverWorkerSize = new AtomicInteger(5);

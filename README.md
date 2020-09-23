@@ -7,8 +7,8 @@ The [original project](https://github.com/EsotericSoftware/kryonetty) was a fork
 
 Simply explained: Send (almost) every object back and forth between client or server.
 
-_____________________
-## Documentation
+
+## Overview
 
 * [EndpointBuilder](#what-is-the-endpointbuilder)
 * [Serialization](#serialization)
@@ -16,13 +16,15 @@ _____________________
 * [Client](#how-to-start-the-client)
 * [Reconnect](#reconnecting-with-client)
 * [Channel-Pool](#connection-pooling)
-* [Events](#how-to-register-an-event)
-* [Own Events](#creating-own-events)
+* [Default Events](#default-events)
+* [Register Events](#register-events)
+* [Create Events](#creating-events)
+* [Handle Events](#throwing-and-consuming-events)
 * [Download](#add-as-dependecy)
 * [Build From Source](#build-from-source)
 
-_____________________
-### What is the EndpointBuilder
+
+## What is the EndpointBuilder
 `EndpointBuilder` passes the options to the endpoints. 
 
 #### Basic options:
@@ -77,21 +79,22 @@ If you have no idea what you are doing with this, you should leave it set by def
     * sets the specific `ISerializer`
     * default: `KryoSerializer` (class-independent)
 
-#### Building the various endpoints:
+## Building the endpoints:
 
-##### Client:
+Client:
 * `build(String host, int port)`
     * Endpoint: `EndpointClient`
 * `build(String host, int port, int poolSize)`
     * Endpoint: `PooledClient`
     
-##### Server:
+Server:
 * `build(int port)`
     * Endpoint: `EndpointServer`
 * `build(int port, int poolSize)`
     * Endpoint: `PooledServer`
 
-### Serialization
+
+## Serialization
 
 Currently there are 3 serializers:
 
@@ -105,31 +108,36 @@ Currently there are 3 serializers:
 * `FSTSerializer`
     * Link: [fast-serialization](https://github.com/RuedigerMoeller/fast-serialization)
     * Requirement: Must implement `Serializable`
+* `HessianSerializer`
+    * Link: [Hessian](http://hessian.caucho.com/)
+    * Requirement: None
+* `QuickserSerializer`
+    * Link: [QuickSer](https://github.com/romix/quickser)
+    * Requirement: None
     
 
-_____________________
-### How to start the server
 
-To start the `EndpointServer`, just call`start()`. 
+## How to start the server
+
+To start the `EndpointServer` call`start()`. 
 
 ```java
     EndpointServer server = builder.build(54321);
     server.start();
 ```
 
-_____________________
-### How to start the client
 
-The `EndpointClient` works quite similar to the `EndpointServer`. 
-Just call `build(String host, int port)`.
+## How to start the client
+
+The `EndpointClient` works quite similar to the `EndpointServer`, just call `start()`.
 
 ```java
     EndpointClient client = builder.build("localhost", 54321);
     client.start();
 ```
 
-_____________________
-### Reconnecting with `Client`
+
+## Reconnecting with `Client`
 
 If you wanted to reconnect a `Client`, you can do it by that way:
 
@@ -146,8 +154,8 @@ If you wanted to reconnect a `Client`, you can do it by that way:
     client.start();
 ```
 
-_____________________
-### Connection-Pooling
+
+## Connection-Pooling
 
 The `PooledClient` opens N (`= poolSize`) channels to the server.
 
@@ -181,8 +189,8 @@ Behind this address:port the desired number of server sockets listen for new con
     server.start();
 ```
 
-_____________________
-### How to register an Event
+
+## Default Events
 
 The event system is completely `Consumer<T>` based. There are some default events:
 
@@ -202,6 +210,9 @@ The event system is completely `Consumer<T>` based. There are some default event
     * client: somewhere an error was thrown
 * `WriteTimeoutEvent` (only client-side)
     * client: somewhere an error was thrown
+
+
+## Register Events
 
 To register an `ConsumerEvent` by using a `Consumer<? extends ConsumerEvent>`:
 
@@ -249,8 +260,8 @@ Here an example to process an object which is fired via a `ReceiveEvent`.
 
 ```
 
-_____________________
-### Creating own Events
+
+## Creating Events
 
 If you want to create your own event and let the clients or servers handle it, an event could look like this:
 
@@ -288,6 +299,9 @@ public class SampleEvent implements ConsumerEvent {
 }
 ```
 
+
+## Throwing and Consuming Events
+
 To call the consumers of the event, you can pass the event to the `EventHandler` in an `AbstractEndpoint`.
 
 Throw the event:
@@ -300,7 +314,7 @@ Consume the event:
 endpoint.eventHandler().registerConsumer(SampleEvent.class, (event) -> System.out.println(event.toString()));
 ```
 
-_____________________
+
 ### Add as dependecy
 
 Add `jitpack.io` as repository. 
@@ -320,7 +334,7 @@ And add it as dependency. (e.g. `1.0` is the release-version)
     }
 ```
 
-_____________________
+
 ### Build from source
 
 If you want to build `binflux-netty-{version}.jar` from source, clone this repository and run `./gradlew build`. 
@@ -328,4 +342,3 @@ The output-file will be in the directory: `/build/libs/binflux-netty-{version}.j
 Gradle downloads the required dependencies and inserts all components into the output-file.
 If you are interested in the build task, look at [build.gradle](https://github.com/BinfluxDev/binflux-netty/blob/master/build.gradle).
 
-_____________________

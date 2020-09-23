@@ -76,8 +76,21 @@ Serializer-options:
 * `serializer(ISerializer serializer)` 
     * sets the specific `ISerializer`
     * default: `KryoSerializer` (class-independent)
-
 _____________________
+Building the various endpoints:
+
+Client:
+* `build(String host, int port)`
+    * Endpoint: `EndpointClient`
+* `build(String host, int port, int poolSize)`
+    * Endpoint: `PooledClient`
+    
+Server:
+* `build(int port)`
+    * Endpoint: `EndpointServer`
+* `build(int port, int poolSize)`
+    * Endpoint: `PooledServer`
+
 ### Serialization
 
 Currently there are 3 serializers:
@@ -98,7 +111,6 @@ _____________________
 ### How to start the server
 
 To start the `EndpointServer`, just call`start()`. 
-The `EndpointServer` needs a configured `EndpointBuilder` instance & an `int port` as argument.
 
 ```java
     EndpointServer server = builder.build(54321);
@@ -126,8 +138,10 @@ If you wanted to reconnect a `Client`, you can do it by that way:
     client.start(); 
     // Client is now connected, so close Channel with:
     client.close();
+    String newHost = "localhost";
+    int newPort = 54322;
     // Change connect-address with:
-    client.setAddress(String host, int port);
+    client.setAddress(newHost, newPort);
     // Client is now disconnected, so reconnect with:
     client.start();
 ```

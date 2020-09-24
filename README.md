@@ -12,20 +12,25 @@ Simply explained: Send (almost) every object back and forth between client or se
 
 This overview offers a simple step by step guide to get started with binflux-netty.
 
+##### Endpoint
 * [EndpointBuilder](#what-is-the-endpointbuilder)
-* [Serialization](#serialization)
-* [Build Endpoints](#building-the-endpoints)
-* [Server](#how-to-start-the-server)
-* [Client](#how-to-start-the-client)
-* [Reconnect](#reconnecting-with-endpointclient)
-* [Channel-Pool](#connection-pooling)
-* [Default Events](#default-events)
-* [Register Events](#register-events)
-* [Create Events](#creating-events)
-* [Handle Events](#throwing-and-consuming-events)
-* [Custom Serializer](#custom-serializers)
-* [Download](#add-as-dependecy)
-* [Build From Source](#build-from-source)
+   * [Serialization](#serialization)
+   * [Build Endpoints](#building-the-endpoints)
+   * [Server](#how-to-start-the-server)
+   * [Client](#how-to-start-the-client)
+   * [Reconnect](#reconnecting-with-endpointclient)
+   * [Channel-Pool](#connection-pooling)
+
+##### Events
+   * [Default Events](#default-events)
+   * [Register Events](#register-events)
+   * [Create Events](#creating-events)
+   * [Handle Events](#throwing-and-consuming-events)
+   * [Custom Serializer](#custom-serializers)
+
+##### Build and Download
+   * [Download](#add-as-dependecy)  
+   * [Build From Source](#build-from-source)
 
 
 ## What is the EndpointBuilder
@@ -345,7 +350,7 @@ To create a `Serializer` implement the interface.
     } 
 ```
 
-### Add as dependecy
+## Add as dependecy
 
 Add `jitpack.io` as repository. 
 
@@ -365,7 +370,7 @@ And add it as dependency. (e.g. `1.0` is the release-version)
 ```
 
 
-### Build from source
+## Build from source
 
 If you want to build `binflux-netty-{version}.jar` from source, clone this repository and run `./gradlew build`. 
 The output-file will be in the directory: `/build/libs/binflux-netty-{version}.jar`

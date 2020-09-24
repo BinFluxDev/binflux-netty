@@ -12,25 +12,25 @@ Simply explained: Send (almost) every object back and forth between client or se
 
 This overview offers a simple step by step guide to get started with binflux-netty.
 
-##### Endpoint
-* [EndpointBuilder](#what-is-the-endpointbuilder)
-   * [Serialization](#serialization)
-   * [Build Endpoints](#building-the-endpoints)
-   * [Server](#how-to-start-the-server)
-   * [Client](#how-to-start-the-client)
-   * [Reconnect](#reconnecting-with-endpointclient)
-   * [Channel-Pool](#connection-pooling)
+#### Endpoint
+  * [EndpointBuilder](#what-is-the-endpointbuilder)
+  * [Serialization](#serialization)
+  * [Build Endpoints](#building-the-endpoints)
+  * [Server](#how-to-start-the-server)
+  * [Client](#how-to-start-the-client)
+  * [Reconnect](#reconnecting-with-endpointclient)
+  * [Channel-Pool](#connection-pooling)
 
-##### Events
-   * [Default Events](#default-events)
-   * [Register Events](#register-events)
-   * [Create Events](#creating-events)
-   * [Handle Events](#throwing-and-consuming-events)
-   * [Custom Serializer](#custom-serializers)
+#### Events
+  * [Default Events](#default-events)
+  * [Register Events](#register-events)
+  * [Create Events](#creating-events)
+  * [Handle Events](#throwing-and-consuming-events)
+  * [Custom Serializer](#custom-serializers)
 
-##### Build and Download
-   * [Download](#add-as-dependecy)  
-   * [Build From Source](#build-from-source)
+#### Build and Download
+  * [Download](#add-as-dependecy)  
+  * [Build From Source](#build-from-source)
 
 
 ## What is the EndpointBuilder

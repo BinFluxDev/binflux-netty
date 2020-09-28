@@ -83,8 +83,8 @@ from the server to the client, a ReadTimeout is thrown.
 If you have no idea what you are doing with this, you should leave it set by default.
 
 #### Serializer options:
-* `serializer(ISerializer serializer)` 
-    * sets the specific `ISerializer`
+* `serializer(Serializer serializer)` 
+    * sets the specific `Serializer`
     * default: `KryoSerializer` (class-independent)
 
 ## Serialization

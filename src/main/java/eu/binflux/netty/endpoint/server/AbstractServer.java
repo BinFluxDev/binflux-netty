@@ -7,11 +7,14 @@ import io.netty.channel.ChannelHandlerContext;
 
 public abstract class AbstractServer extends AbstractEndpoint {
 
+    private int port;
+
     /**
      * Default constructor of `AbstractEndpoint`
      */
-    public AbstractServer(EndpointBuilder endpointBuilder) {
+    public AbstractServer(EndpointBuilder endpointBuilder, int port) {
         super(endpointBuilder);
+        this.port = port;
     }
 
     /**
@@ -27,4 +30,17 @@ public abstract class AbstractServer extends AbstractEndpoint {
         return EndpointType.SERVER;
     }
 
+    /**
+     * Sets the port for the server
+     */
+    public void setPort(int port) {
+        if (port > 0)
+            this.port = port;
+    }
+    /**
+     * Getter of the port
+     */
+    public int getPort() {
+        return port;
+    }
 }

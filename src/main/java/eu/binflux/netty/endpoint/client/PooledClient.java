@@ -5,7 +5,10 @@ import eu.binflux.netty.eventhandler.consumer.ErrorEvent;
 import eu.binflux.netty.handler.NettyInitializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -20,19 +23,15 @@ public class PooledClient extends AbstractClient {
 
     private final EventLoopGroup eventLoopGroup;
     private final Bootstrap bootstrap;
-    private String host;
-    private int port;
     private int poolSize;
 
     private final Set<Channel> activeConnectionSet;
     private final BlockingQueue<Channel> freeConnectionDeque;
 
     public PooledClient(EndpointBuilder endpointBuilder, String host, int port, int poolSize) {
-        super(endpointBuilder);
+        super(endpointBuilder, host, port);
 
         // Set final fields
-        this.host = host;
-        this.port = port;
         this.poolSize = poolSize;
         this.executor = Executors.newFixedThreadPool(2 * this.poolSize);
 
@@ -55,7 +54,7 @@ public class PooledClient extends AbstractClient {
                 .group(this.eventLoopGroup)
                 .channel(Epoll.isAvailable() ? EpollSocketChannel.class : NioSocketChannel.class)
                 .handler(new NettyInitializer(this))
-                .remoteAddress(new InetSocketAddress(this.host, this.port))
+                .remoteAddress(new InetSocketAddress(getHost(), getPort()))
                 .option(ChannelOption.TCP_NODELAY, true)
                 .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
@@ -123,7 +122,7 @@ public class PooledClient extends AbstractClient {
     private Channel newChannel() {
         try {
             // Connect new channel
-            Channel channel = this.bootstrap.connect(new InetSocketAddress(host, port)).await().channel();
+            Channel channel = this.bootstrap.connect(new InetSocketAddress(getHost(), getPort())).await().channel();
 
             // Add it to the connection-list
             activeConnectionSet.add(channel);
@@ -216,15 +215,17 @@ public class PooledClient extends AbstractClient {
     }
 
     /**
-     * Sets the host, port and poolSize of the client
+     * Sets the poolSize of the client
      */
-    public void setAddress(String host, int port, int poolSize) {
-        if (host != null)
-            this.host = host;
-        if (port > 0)
-            this.port = port;
+    public void setPoolSize(int poolSize) {
         if (poolSize > 0)
             this.poolSize = poolSize;
     }
 
+    /**
+     * Getter for int poolSize
+     */
+    public int getPoolSize() {
+        return poolSize;
+    }
 }

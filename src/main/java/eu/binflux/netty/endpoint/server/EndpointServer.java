@@ -21,12 +21,9 @@ public class EndpointServer extends AbstractServer {
     private final EventLoopGroup bossGroup;
     private final EventLoopGroup workerGroup;
     private Channel channel;
-    private int port;
 
     public EndpointServer(EndpointBuilder endpointBuilder, int port) {
-        super(endpointBuilder);
-
-        this.port = port;
+        super(endpointBuilder, port);
 
         // Note: We don't support KQueue.
 
@@ -90,13 +87,13 @@ public class EndpointServer extends AbstractServer {
      */
     @Override
     public boolean start() {
-        if (port == -1) {
+        if (getPort() == -1) {
             eventHandler().handleEvent(new ErrorEvent(new RuntimeException("port is not set")));
             return false;
         }
         try {
             // Start the server and wait for socket to be bind to the given port
-            this.channel = serverBootstrap.bind(new InetSocketAddress(port)).sync().channel();
+            this.channel = serverBootstrap.bind(new InetSocketAddress(getPort())).sync().channel();
             return true;
         } catch (InterruptedException e) {
             eventHandler().handleEvent(new ErrorEvent(e));
@@ -147,12 +144,5 @@ public class EndpointServer extends AbstractServer {
             ctx.writeAndFlush(object);
     }
 
-    /**
-     * Sets the port for the server
-     */
-    public void setPort(int port) {
-        if (port > 0)
-            this.port = port;
-    }
 
 }

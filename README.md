@@ -49,7 +49,7 @@ This overview offers a simple step by step guide to get started with binflux-net
 
 #### IdleState options:
 * `idleState(int readTimeout, int writeTimeout)`
-    * enables initialization of `KryoNettyIdleHandler.class`
+    * enables initialization of `NettyIdleHandler.class`
     * default: disabled 
     * default-write-time: 15
     * default-read-time: 0 (= disabled)

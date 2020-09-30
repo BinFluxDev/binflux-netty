@@ -25,13 +25,11 @@ public class PooledServer extends AbstractServer {
     private final EventLoopGroup workerGroup;
     private final Set<Channel> serverSocketList;
     private int poolSize;
-    private int port;
 
     public PooledServer(EndpointBuilder endpointBuilder, int port, int poolSize) {
-        super(endpointBuilder);
+        super(endpointBuilder, port);
 
         this.poolSize = poolSize;
-        this.port = port;
 
         // Note: We don't support KQueue.
 
@@ -74,7 +72,7 @@ public class PooledServer extends AbstractServer {
     public boolean start() {
         try {
             for (int i = 1; i <= poolSize; i++) {
-                Channel channel = bootstrap.bind(new InetSocketAddress(port)).sync().channel();
+                Channel channel = bootstrap.bind(new InetSocketAddress(getPort())).sync().channel();
                 serverSocketList.add(channel);
                 channel.closeFuture().addListener((future) -> serverSocketList.remove(channel));
             }
@@ -154,13 +152,18 @@ public class PooledServer extends AbstractServer {
     }
 
     /**
-     * Sets the port and poolSize of the server
+     * Sets the poolSize of the server
      */
-    public void setPort(int port, int poolSize) {
-        if (port > 0)
-            this.port = port;
+    public void setPoolSize(int port, int poolSize) {
         if(poolSize > 0)
             this.poolSize = poolSize;
+    }
+
+    /**
+     * Getter for int poolSize
+     */
+    public int getPoolSize() {
+        return poolSize;
     }
 
 }

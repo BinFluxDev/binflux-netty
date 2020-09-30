@@ -24,14 +24,9 @@ public class EndpointClient extends AbstractClient {
     private final EventLoopGroup group;
     private Bootstrap bootstrap;
     private Channel channel;
-    private String host;
-    private int port;
 
     public EndpointClient(EndpointBuilder endpointBuilder, String host, int port) {
-        super(endpointBuilder);
-
-        this.host = host;
-        this.port = port;
+        super(endpointBuilder, host, port);
 
         this.executor = Executors.newFixedThreadPool(2 * endpointBuilder.getClientWorkerSize());
 
@@ -127,8 +122,8 @@ public class EndpointClient extends AbstractClient {
     @Override
     public boolean start() {
         // Check if host and port is set
-        if (host == null || port == -1) {
-            eventHandler().handleEvent(new ErrorEvent(new RuntimeException(host == null ? "host-address is not set!" : "port is not set!")));
+        if (getHost() == null || getPort() == -1) {
+            eventHandler().handleEvent(new ErrorEvent(new RuntimeException(getHost() == null ? "host-address is not set!" : "port is not set!")));
             return false;
         }
 
@@ -140,22 +135,12 @@ public class EndpointClient extends AbstractClient {
 
         // Start the client and wait for the connection to be established.
         try {
-            this.channel = this.bootstrap.connect(new InetSocketAddress(host, port)).sync().channel();
+            this.channel = this.bootstrap.connect(new InetSocketAddress(getHost(), getPort())).sync().channel();
             return true;
         } catch (InterruptedException e) {
             eventHandler().handleEvent(new ErrorEvent(e));
         }
         return false;
-    }
-
-    /**
-     * Sets the host and port of the client
-     */
-    public void setAddress(String host, int port) {
-        if (host != null)
-            this.host = host;
-        if (port > 0)
-            this.port = port;
     }
 
 }

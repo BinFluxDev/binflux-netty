@@ -94,20 +94,19 @@ Default Serializers:
 * `KryoSerializer` ( + `KryoUnsafeSerializer`)
     * Link: [Kryo](https://github.com/EsotericSoftware/kryo)
     * Requirement: None
-    * (optional) constructor: `KryoSerializer(int inputSize, int outputSize, int maxOutputSize)`
 * `JavaSerializer`
     * Link: [Java](https://docs.oracle.com/javase/tutorial/jndi/objects/serial.html#:~:text=To%20serialize%20an%20object%20means,interface%20or%20its%20subinterface%2C%20java.)
     * Requirement: Implement `Serializable`
 * `FSTSerializer` ( + `FSTNoSharedSerializer`)
     * Link: [fast-serialization](https://github.com/RuedigerMoeller/fast-serialization)
     * Requirement: Implement `Serializable`
-* `HessianSerializer`
+* `HessianSerializer` ( + `Hessian2Serializer`)
     * Link: [Hessian](http://hessian.caucho.com/)
     * Requirement: None
 * `QuickserSerializer`
     * Link: [QuickSer](https://github.com/romix/quickser)
     * Requirement: None
-* `ElsaSerializer`
+* `ElsaSerializer` ( + `ElsaStreamSerializer`)
     * Link: [Elsa](http://www.mapdb.org/)
     * Requirement: None
 

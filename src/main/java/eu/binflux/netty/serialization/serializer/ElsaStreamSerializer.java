@@ -1,15 +1,15 @@
 package eu.binflux.netty.serialization.serializer;
 
-import com.caucho.hessian.io.HessianInput;
-import com.caucho.hessian.io.HessianOutput;
 import eu.binflux.netty.exceptions.SerializerException;
 import eu.binflux.netty.serialization.Serializer;
+import org.mapdb.elsa.ElsaObjectInputStream;
+import org.mapdb.elsa.ElsaObjectOutputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
-public class HessianSerializer implements Serializer {
+public class ElsaStreamSerializer implements Serializer {
 
     @Override
     public <T> byte[] serialize(T object) {
@@ -17,8 +17,9 @@ public class HessianSerializer implements Serializer {
             if(!(object instanceof Serializable))
                 throw new SerializerException("Object doesn't implement Serializable");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            HessianOutput output = new HessianOutput(outputStream);
+            ElsaObjectOutputStream output = new ElsaObjectOutputStream(outputStream);
             output.writeObject(object);
+            output.flush();
             output.close();
             return outputStream.toByteArray();
         } catch (Throwable e) {
@@ -31,7 +32,7 @@ public class HessianSerializer implements Serializer {
     public <T> T deserialize(byte[] bytes) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-            HessianInput input = new HessianInput(inputStream);
+            ElsaObjectInputStream input = new ElsaObjectInputStream(inputStream);
             @SuppressWarnings("unchecked")
             T object = (T) input.readObject();
             input.close();

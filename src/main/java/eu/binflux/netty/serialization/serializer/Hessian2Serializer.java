@@ -1,7 +1,7 @@
 package eu.binflux.netty.serialization.serializer;
 
-import com.caucho.hessian.io.HessianInput;
-import com.caucho.hessian.io.HessianOutput;
+import com.caucho.hessian.io.Hessian2Input;
+import com.caucho.hessian.io.Hessian2Output;
 import eu.binflux.netty.exceptions.SerializerException;
 import eu.binflux.netty.serialization.Serializer;
 
@@ -9,7 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
-public class HessianSerializer implements Serializer {
+public class Hessian2Serializer implements Serializer {
 
     @Override
     public <T> byte[] serialize(T object) {
@@ -17,8 +17,10 @@ public class HessianSerializer implements Serializer {
             if(!(object instanceof Serializable))
                 throw new SerializerException("Object doesn't implement Serializable");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            HessianOutput output = new HessianOutput(outputStream);
+            Hessian2Output output = new Hessian2Output(outputStream);
+            output.startMessage();
             output.writeObject(object);
+            output.completeMessage();
             output.close();
             return outputStream.toByteArray();
         } catch (Throwable e) {
@@ -31,9 +33,11 @@ public class HessianSerializer implements Serializer {
     public <T> T deserialize(byte[] bytes) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-            HessianInput input = new HessianInput(inputStream);
+            Hessian2Input input = new Hessian2Input(inputStream);
+            input.startMessage();
             @SuppressWarnings("unchecked")
             T object = (T) input.readObject();
+            input.completeMessage();
             input.close();
             return object;
         } catch (Exception e) {

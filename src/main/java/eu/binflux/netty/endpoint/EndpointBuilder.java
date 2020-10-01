@@ -1,9 +1,10 @@
 package eu.binflux.netty.endpoint;
 
 import eu.binflux.netty.endpoint.client.EndpointClient;
-import eu.binflux.netty.endpoint.server.EndpointServer;
 import eu.binflux.netty.endpoint.client.PooledClient;
+import eu.binflux.netty.endpoint.server.EndpointServer;
 import eu.binflux.netty.endpoint.server.PooledServer;
+import eu.binflux.netty.serialization.PooledSerializer;
 import eu.binflux.netty.serialization.Serializer;
 import eu.binflux.netty.serialization.serializer.KryoSerializer;
 
@@ -26,6 +27,7 @@ public final class EndpointBuilder {
     private final AtomicInteger serverBossSize;
     private final AtomicInteger serverWorkerSize;
 
+    private PooledSerializer pooledSerializer;
     private Serializer serializer;
 
     private EndpointBuilder() {
@@ -42,6 +44,8 @@ public final class EndpointBuilder {
 
         this.serverBossSize = new AtomicInteger(1);
         this.serverWorkerSize = new AtomicInteger(5);
+
+        this.pooledSerializer = new PooledSerializer(KryoSerializer.class);
 
         this.serializer = new KryoSerializer();
     }
@@ -83,9 +87,23 @@ public final class EndpointBuilder {
         return this;
     }
 
-    public EndpointBuilder serializer(Serializer serializer) {
-        this.serializer = serializer;
+    public EndpointBuilder serializer(PooledSerializer pooledSerializer) {
+        this.pooledSerializer = pooledSerializer;
         return this;
+    }
+
+    public <T> byte[] serialize(T object) {
+        Serializer serializer = pooledSerializer.obtain();
+        byte[] bytes = serializer.serialize(object);
+        pooledSerializer.free(serializer);
+        return bytes;
+    }
+
+    public <T> T deserialize(byte[] bytes) {
+        Serializer serializer = pooledSerializer.obtain();
+        T object = serializer.deserialize(bytes);
+        pooledSerializer.free(serializer);
+        return object;
     }
 
     public boolean isLogging() {

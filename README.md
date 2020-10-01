@@ -42,7 +42,7 @@ This overview offers a simple step by step guide to get started with binflux-net
     * default: disabled
 * `eventExecutor(int threadPoolSize)` 
     * enables `EventExecutorGroup.class`
-    * thread-pool-size * cores
+    * thread-pooledSerializer-size * cores
     * default: disabled
     
 `eventExecutor` allow asynchronous processing of the handler on client & server side and its size. 
@@ -177,7 +177,7 @@ The `PooledClient` opens N (`= poolSize`) channels to the server.
     PooledClient client = builder.build("localhost", 54321, poolSize);
 ```
 
-By using the `start()`-call, the `PooledClient` fills the channel pool with 
+By using the `start()`-call, the `PooledClient` fills the channel pooledSerializer with 
 the maximum number of channels. As soon as a channel is closed and needed again (many `send`-calls) 
 the client restarts the channel automatically.
 

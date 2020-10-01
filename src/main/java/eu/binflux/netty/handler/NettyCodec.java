@@ -21,7 +21,7 @@ public class NettyCodec extends ByteToMessageCodec<Object> {
     protected void encode(ChannelHandlerContext ctx, Object object, ByteBuf out) {
         try {
             // Encode object to byte[]
-            byte[] outArray = endpoint.builder().getSerializer().serialize(object);
+            byte[] outArray = endpoint.builder().serialize(object);
 
             // Write byte[] length to ByteBuf
             writeVarInt(out, outArray.length);
@@ -58,7 +58,7 @@ public class NettyCodec extends ByteToMessageCodec<Object> {
             in.readBytes(packetContent);
 
             // Read content as byte[]
-            Object object = endpoint.builder().getSerializer().deserialize(packetContent);
+            Object object = endpoint.builder().deserialize(packetContent);
 
             // Add object to output-list
             out.add(object);

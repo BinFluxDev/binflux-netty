@@ -5,6 +5,7 @@ import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
 import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
+import eu.binflux.netty.serialization.PooledSerializer;
 import eu.binflux.netty.serialization.serializer.FSTSerializer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -26,7 +27,7 @@ public class StringTest extends AbstractBenchmark {
     public static void setupClass() {
         System.out.println("== Test String/Sec Behaviour == ");
 
-        StaticTest.BUILDER.serializer(new FSTSerializer());
+        StaticTest.BUILDER.serializer(new PooledSerializer(FSTSerializer.class));
 
         server = StaticTest.BUILDER.build(54321);
 

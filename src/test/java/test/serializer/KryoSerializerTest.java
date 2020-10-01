@@ -5,6 +5,7 @@ import eu.binflux.netty.endpoint.EndpointBuilder;
 import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
+import eu.binflux.netty.serialization.PooledSerializer;
 import eu.binflux.netty.serialization.serializer.KryoSerializer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -32,7 +33,7 @@ public class KryoSerializerTest {
 
         BUILDER = EndpointBuilder.newBuilder()
                 .eventExecutor(5)
-                .serializer(new KryoSerializer());
+                .serializer(new PooledSerializer(KryoSerializer.class));
 
         server = BUILDER.build(54321);
 

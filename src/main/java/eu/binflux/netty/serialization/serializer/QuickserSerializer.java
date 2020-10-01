@@ -4,7 +4,7 @@ import com.romix.quickser.Serialization;
 import eu.binflux.netty.exceptions.SerializerException;
 import eu.binflux.netty.serialization.Serializer;
 
-import java.io.Serializable;
+import java.io.*;
 
 public class QuickserSerializer implements Serializer {
 
@@ -19,7 +19,12 @@ public class QuickserSerializer implements Serializer {
         try {
             if(!(object instanceof Serializable))
                 throw new SerializerException("Object doesn't implement Serializable");
-            return serialization.serialize(object);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            DataOutputStream output = new DataOutputStream(outputStream);
+            serialization.serialize(output, object);
+            output.flush();
+            output.close();
+            return outputStream.toByteArray();
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -29,7 +34,11 @@ public class QuickserSerializer implements Serializer {
     @Override
     public <T> T deserialize(byte[] bytes) {
         try {
-            return (T) serialization.deserialize(bytes);
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+            DataInputStream input = new DataInputStream(inputStream);
+            T object = (T) serialization.deserialize(input);
+            input.close();
+            return object;
         } catch (Exception e) {
             e.printStackTrace();
         }

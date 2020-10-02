@@ -1,25 +1,22 @@
 
-package test.serializer;
+package test.benchmark;
 
-import eu.binflux.netty.endpoint.EndpointBuilder;
+import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
 import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
 import eu.binflux.netty.serialization.PooledSerializer;
-import eu.binflux.netty.serialization.serializer.Hessian2Serializer;
+import eu.binflux.netty.serialization.serializer.FSTSerializer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import test.StaticTest;
-import test.benchmark.RandomRequest;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
-public class Hessian2SerializerTest {
-
-    public static EndpointBuilder BUILDER;
+public class RandomRequestTest extends AbstractBenchmark {
 
     public static AbstractServer server;
     public static AbstractClient client;
@@ -29,13 +26,11 @@ public class Hessian2SerializerTest {
 
     @BeforeClass
     public static void setupClass() {
-        System.out.println("== Test HessianSerializer Behaviour == ");
+        System.out.println("== Test RandomRequest/Sec Behaviour == ");
 
-        BUILDER = EndpointBuilder.newBuilder()
-                .eventExecutor(5)
-                .serializer(new PooledSerializer(Hessian2Serializer.class));
+        StaticTest.BUILDER.serializer(new PooledSerializer(FSTSerializer.class));
 
-        server = BUILDER.build(54321);
+        server = StaticTest.BUILDER.build(54321);
 
         server.eventHandler().registerConsumer(ReceiveEvent.class, event -> {
             if(event.getObject() instanceof RandomRequest) {
@@ -47,13 +42,14 @@ public class Hessian2SerializerTest {
             }
         });
 
-        client = BUILDER.build("localhost", 54321, 5);
+        client = StaticTest.BUILDER.build("localhost", 54321, 5);
 
         average = new AtomicInteger();
         counter = new AtomicInteger();
 
         assertTrue(server.start());
         assertTrue(client.start());
+
     }
 
     @AfterClass
@@ -61,7 +57,7 @@ public class Hessian2SerializerTest {
         assertTrue(client.stop());
         assertTrue(server.stop());
         System.out.println(average.get() + " packets/sec in average");
-        System.out.println("== Finished HessianSerializer Behaviour == ");
+        System.out.println("== Finished RandomRequest/Sec Behaviour == ");
     }
 
     @Test

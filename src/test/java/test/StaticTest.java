@@ -1,6 +1,8 @@
 package test;
 
 import eu.binflux.netty.endpoint.EndpointBuilder;
+import test.benchmark.KotlinRequest;
+import test.benchmark.RandomRequest;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,8 +12,10 @@ public class StaticTest {
     public static EndpointBuilder BUILDER;
 
     public static RandomRequest RANDOM_REQUEST;
+    public static KotlinRequest KOTLIN_REQUEST;
     public static String testString;
     public static long testLong;
+    public static int testInt;
     public static byte[] testBytes;
 
     static {
@@ -23,8 +27,11 @@ public class StaticTest {
 
         testString = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat";
         testLong = System.currentTimeMillis();
+        testInt = new Random().nextInt(5000);
 
         RANDOM_REQUEST = new RandomRequest(testString, testLong, testBytes);
+
+        KOTLIN_REQUEST = new KotlinRequest(testString, testLong, testInt);
     }
 
     public static int getPacketsPerSec(int amount, long time) {

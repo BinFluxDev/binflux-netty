@@ -10,8 +10,8 @@ import eu.binflux.netty.serialization.serializer.KryoUnsafeSerializer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import test.RandomRequest;
 import test.StaticTest;
+import test.benchmark.RandomRequest;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

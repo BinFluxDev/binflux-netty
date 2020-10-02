@@ -6,7 +6,7 @@ import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
 import eu.binflux.netty.serialization.PooledSerializer;
-import eu.binflux.netty.serialization.serializer.KryoUnsafeSerializer;
+import eu.binflux.netty.serialization.serializer.KryoUnsafeSerialization;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
-public class KryoUnsafeSerializerTest {
+public class KryoUnsafeSerializationTest {
 
     public static EndpointBuilder BUILDER;
 
@@ -33,7 +33,7 @@ public class KryoUnsafeSerializerTest {
 
         BUILDER = EndpointBuilder.newBuilder()
                 .eventExecutor(5)
-                .serializer(new PooledSerializer(KryoUnsafeSerializer.class));
+                .serializer(new PooledSerializer(KryoUnsafeSerialization.class));
 
         server = BUILDER.build(54321);
 

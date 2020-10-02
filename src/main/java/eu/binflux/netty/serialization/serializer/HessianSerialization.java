@@ -1,13 +1,15 @@
 package eu.binflux.netty.serialization.serializer;
 
+import com.caucho.hessian.io.HessianInput;
+import com.caucho.hessian.io.HessianOutput;
 import eu.binflux.netty.exceptions.SerializerException;
-import eu.binflux.netty.serialization.Serializer;
-import org.nustaq.serialization.FSTObjectInput;
-import org.nustaq.serialization.FSTObjectOutput;
+import eu.binflux.netty.serialization.Serialization;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 
-public class FSTSerializer implements Serializer {
+public class HessianSerialization implements Serialization {
 
     @Override
     public <T> byte[] serialize(T object) {
@@ -15,9 +17,8 @@ public class FSTSerializer implements Serializer {
             if(!(object instanceof Serializable))
                 throw new SerializerException("Object doesn't implement Serializable");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            FSTObjectOutput output = new FSTObjectOutput(outputStream);
+            HessianOutput output = new HessianOutput(outputStream);
             output.writeObject(object);
-            output.flush();
             output.close();
             return outputStream.toByteArray();
         } catch (Throwable e) {
@@ -30,7 +31,7 @@ public class FSTSerializer implements Serializer {
     public <T> T deserialize(byte[] bytes) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-            FSTObjectInput input = new FSTObjectInput(inputStream);
+            HessianInput input = new HessianInput(inputStream);
             @SuppressWarnings("unchecked")
             T object = (T) input.readObject();
             input.close();

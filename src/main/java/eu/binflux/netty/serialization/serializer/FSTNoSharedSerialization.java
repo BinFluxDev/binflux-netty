@@ -1,18 +1,15 @@
 package eu.binflux.netty.serialization.serializer;
 
-import com.romix.quickser.Serialization;
 import eu.binflux.netty.exceptions.SerializerException;
-import eu.binflux.netty.serialization.Serializer;
+import eu.binflux.netty.serialization.Serialization;
+import org.nustaq.serialization.FSTObjectInputNoShared;
+import org.nustaq.serialization.FSTObjectOutputNoShared;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 
-public class QuickserSerializer implements Serializer {
-
-    private final Serialization serialization;
-
-    public QuickserSerializer() {
-        this.serialization = new Serialization();
-    }
+public class FSTNoSharedSerialization implements Serialization {
 
     @Override
     public <T> byte[] serialize(T object) {
@@ -20,8 +17,8 @@ public class QuickserSerializer implements Serializer {
             if(!(object instanceof Serializable))
                 throw new SerializerException("Object doesn't implement Serializable");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            DataOutputStream output = new DataOutputStream(outputStream);
-            serialization.serialize(output, object);
+            FSTObjectOutputNoShared output = new FSTObjectOutputNoShared(outputStream);
+            output.writeObject(object);
             output.flush();
             output.close();
             return outputStream.toByteArray();
@@ -35,8 +32,9 @@ public class QuickserSerializer implements Serializer {
     public <T> T deserialize(byte[] bytes) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-            DataInputStream input = new DataInputStream(inputStream);
-            T object = (T) serialization.deserialize(input);
+            FSTObjectInputNoShared input = new FSTObjectInputNoShared(inputStream);
+            @SuppressWarnings("unchecked")
+            T object = (T) input.readObject();
             input.close();
             return object;
         } catch (Exception e) {

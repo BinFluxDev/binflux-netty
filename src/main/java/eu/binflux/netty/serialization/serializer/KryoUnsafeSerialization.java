@@ -4,13 +4,13 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.unsafe.UnsafeInput;
 import com.esotericsoftware.kryo.unsafe.UnsafeOutput;
 import com.esotericsoftware.kryo.util.Pool;
-import eu.binflux.netty.serialization.Serializer;
+import eu.binflux.netty.serialization.Serialization;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-public class KryoUnsafeSerializer implements Serializer {
+public class KryoUnsafeSerialization implements Serialization {
 
     private static final int DEFAULT_INPUT_BUFFER_SIZE = 262144;
     private static final int DEFAULT_OUTPUT_BUFFER_SIZE = 262144;
@@ -20,11 +20,11 @@ public class KryoUnsafeSerializer implements Serializer {
     private final Pool<UnsafeInput> inputPool;
     private final Pool<UnsafeOutput> outputPool;
 
-    public KryoUnsafeSerializer() {
+    public KryoUnsafeSerialization() {
         this(DEFAULT_INPUT_BUFFER_SIZE, DEFAULT_OUTPUT_BUFFER_SIZE, DEFAULT_MAX_OUTPUT_BUFFER_SIZE);
     }
 
-    public KryoUnsafeSerializer(int inputBufferSize, int outputBufferSize, int maxOutputSize) {
+    public KryoUnsafeSerialization(int inputBufferSize, int outputBufferSize, int maxOutputSize) {
 
         // Initialize Kryo-Pool
         kryoPool = new Pool<Kryo>(true, true) {

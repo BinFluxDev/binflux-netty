@@ -6,7 +6,7 @@ import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
 import eu.binflux.netty.serialization.PooledSerializer;
-import eu.binflux.netty.serialization.serializer.FSTNoSharedSerializer;
+import eu.binflux.netty.serialization.serializer.Hessian2Serialization;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
-public class FSTNoSharedSerializerTest {
+public class Hessian2SerializationTest {
 
     public static EndpointBuilder BUILDER;
 
@@ -29,11 +29,11 @@ public class FSTNoSharedSerializerTest {
 
     @BeforeClass
     public static void setupClass() {
-        System.out.println("== Test FSTNoSharedSerializer Behaviour == ");
+        System.out.println("== Test HessianSerializer Behaviour == ");
 
         BUILDER = EndpointBuilder.newBuilder()
                 .eventExecutor(5)
-                .serializer(new PooledSerializer(FSTNoSharedSerializer.class));
+                .serializer(new PooledSerializer(Hessian2Serialization.class));
 
         server = BUILDER.build(54321);
 
@@ -61,7 +61,7 @@ public class FSTNoSharedSerializerTest {
         assertTrue(client.stop());
         assertTrue(server.stop());
         System.out.println(average.get() + " packets/sec in average");
-        System.out.println("== Finished FSTNoSharedSerializer Behaviour == ");
+        System.out.println("== Finished HessianSerializer Behaviour == ");
     }
 
     @Test

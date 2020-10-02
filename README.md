@@ -14,7 +14,11 @@ This overview offers a simple step by step guide to get started with binflux-net
 
 #### Endpoint
   * [EndpointBuilder](#what-is-the-endpointbuilder)
-  * [Serialization](#serialization)
+    * [Basic](#basic-options)
+    * [IdleState](#idlestate-options)
+    * [Netty](#netty-options)
+    * [Serializer](#serializer-options)
+  * [Serialization](#implemented-serialization)
   * [Build Endpoints](#building-the-endpoints)
   * [Server](#how-to-start-the-server)
   * [Client](#how-to-start-the-client)
@@ -34,7 +38,11 @@ This overview offers a simple step by step guide to get started with binflux-net
 
 
 ## What is the EndpointBuilder
-`EndpointBuilder.class` - passes options to endpoints. 
+`EndpointBuilder.class` - passes options to endpoints. To get a new instance:
+
+```java
+EndpointBuilder builder = EndpointBuilder.newBuilder();
+```
 
 #### Basic options:
 * `logging(boolean value)` 
@@ -83,46 +91,53 @@ from the server to the client, a ReadTimeout is thrown.
 If you have no idea what you are doing with this, you should leave it set by default.
 
 #### Serializer options:
-* `serializer(Serializer serializer)` 
-    * sets the specific `Serializer`
-    * default: `KryoSerializer` (class-independent)
+* `serializer(PooledSerializer serialization)` 
+    * sets the specific `PooledSerializer` with `Serialization`
+    * default: `KryoSerialization`
 
-## Serialization
+For better performance the serializations are pooled with a `PooledSerializer`. 
 
-Default Serializers:
+Example usage:
+```java
+endpointBuilder.serializer(new PooledSerializer(KryoSerialization.class));
+```
 
-* `KryoSerializer` ( + `KryoUnsafeSerializer`)
-    * Link: [Kryo](https://github.com/EsotericSoftware/kryo)
-    * Requirement: None
-* `JavaSerializer`
-    * Link: [Java](https://docs.oracle.com/javase/tutorial/jndi/objects/serial.html#:~:text=To%20serialize%20an%20object%20means,interface%20or%20its%20subinterface%2C%20java.)
-    * Requirement: Implement `Serializable`
-* `FSTSerializer` ( + `FSTNoSharedSerializer`)
-    * Link: [fast-serialization](https://github.com/RuedigerMoeller/fast-serialization)
-    * Requirement: Implement `Serializable`
-* `HessianSerializer` ( + `Hessian2Serializer`)
-    * Link: [Hessian](http://hessian.caucho.com/)
-    * Requirement: None
-* `QuickserSerializer`
-    * Link: [QuickSer](https://github.com/romix/quickser)
-    * Requirement: None
-* `ElsaSerializer` ( + `ElsaStreamSerializer`)
-    * Link: [Elsa](http://www.mapdb.org/)
-    * Requirement: None
+## Implemented Serialization
+
+| Serialization (Class)      | Serialization (Framework) |
+|----------------------------|---------------------------|
+| `KryoSerialization`        | Kryo                      |
+| `KryoUnsafeSerialization`  | Kryo                      |
+| `JavaSerialization`        | Java I/O                  |
+| `FSTSerialization`         | fast-serialization        |
+| `FSTNoSharedSerialization` | fast-serialization        |
+| `HessianSerialization`     | Hessian                   |
+| `Hessian2Serialization`    | Hessian                   |
+| `QuickserSerialization`    | QuickSer                  |
+| `ElsaSerialization`        | Elsa                      |
+| `ElsaStreamSerialization`  | Elsa                      |
+
+Framework Links:
+* [Kryo](https://github.com/EsotericSoftware/kryo)
+* [Java Tutorial](https://docs.oracle.com/javase/tutorial/jndi/objects/serial.html#:~:text=To%20serialize%20an%20object%20means,interface%20or%20its%20subinterface%2C%20java.)
+* [fast-serialization](https://github.com/RuedigerMoeller/fast-serialization)
+* [Hessian](http://hessian.caucho.com/)
+* [QuickSer](https://github.com/romix/quickser)
+* [Elsa](http://www.mapdb.org/)
 
 ## Building the endpoints:
 
 To build the client:
 * `build(String host, int port)`
-    * Endpoint: `EndpointClient`
+    * Endpoint: `EndpointClient` (extends `AbstractClient`)
 * `build(String host, int port, int poolSize)`
-    * Endpoint: `PooledClient`
+    * Endpoint: `PooledClient` (extends `AbstractClient`)
     
 To build the server:
 * `build(int port)`
-    * Endpoint: `EndpointServer`
+    * Endpoint: `EndpointServer` (extends `AbstractServer`)
 * `build(int port, int poolSize)`
-    * Endpoint: `PooledServer`
+    * Endpoint: `PooledServer` (extends `AbstractServer`)
 
 ## How to start the server
 
@@ -133,14 +148,13 @@ To start the `EndpointServer` call`start()`.
     server.start();
 ```
 
-
 ## How to start the client
 
 The `EndpointClient` works quite similar to the `EndpointServer`, just call `start()`.
 
 ```java
-    EndpointClient client = builder.build("localhost", 54321);
-    client.start();
+EndpointClient client = builder.build("localhost", 54321);
+client.start();
 ```
 
 
@@ -150,41 +164,40 @@ If you want to reconnect a `EndpointClient`, do this:
 
 * Connect Endpoint
 ```java
-    EndpointClient client = builder.build("localhost", 54321);
-    client.start(); 
+EndpointClient client = builder.build("localhost", 54321);
+client.start(); 
 ```
 * Close it - not `stop()`
 ```java
-    client.close();
+client.close();
 ```
 
 * (optional) Change address
 ```java
-    client.setAddress("localhost", 12345);
+client.setAddress("localhost", 12345);
 ```
 * Start again
 ```java
-    client.start();
+client.start();
 ```
-
 
 ## Connection-Pooling
 
 The `PooledClient` opens N (`= poolSize`) channels to the server.
 
 ```java
-    int poolSize = 10; // 10 client-to-server connections
-    PooledClient client = builder.build("localhost", 54321, poolSize);
+int poolSize = 10; // 10 client-to-server connections
+PooledClient client = builder.build("localhost", 54321, poolSize);
 ```
 
-By using the `start()`-call, the `PooledClient` fills the channel pooledSerializer with 
+By using the `start()`-call, the `PooledClient` fills the channel pool with 
 the maximum number of channels. As soon as a channel is closed and needed again (many `send`-calls) 
 the client restarts the channel automatically.
 
 ```java
-    int poolSize = 10; // 10 client-to-server connections
-    PooledClient client = builder.build("localhost", 54321, poolSize);
-    client.start();
+int poolSize = 10; // 10 client-to-server connections
+PooledClient client = builder.build("localhost", 54321, poolSize);
+client.start();
 ```
 
 The events are combined on the `PooledServer` & `PooledClient`. 
@@ -197,11 +210,10 @@ This has the consequence that the `PooledServer` works only under OSes with `Epo
 Behind this address:port the desired number of server sockets listen for new connections.
 
 ```java
-    int poolSize = 10; // 10 server-sockets listening
-    PooledServer server = new PooledServer(builder, 54321, poolSize);
-    server.start();
+int poolSize = 10; // 10 server-sockets listening
+PooledServer server = new PooledServer(builder, 54321, poolSize);
+server.start();
 ```
-
 
 ## Default Events
 
@@ -230,13 +242,13 @@ The event system is completely `Consumer<T>` based. There are some default event
 To register an `ConsumerEvent` by using a `Consumer<ConnectEvent>`:
 
 ```java
-    public class ConnectionConsumer implements Consumer<ConnectEvent> {
-        @Override
-        public void onEvent(ConnectEvent connectEvent) {
-            ChannelHandlerContext ctx = event.getCtx();
-            System.out.println("Server: Client connected: " + ctx.channel().remoteAddress());
-        }
+public class ConnectionConsumer implements Consumer<ConnectEvent> {
+    @Override
+    public void onEvent(ConnectEvent connectEvent) {
+        ChannelHandlerContext ctx = event.getCtx();
+        System.out.println("Server: Client connected: " + ctx.channel().remoteAddress());
     }
+}
 ```
 
 To register an event to an endpoint
@@ -251,29 +263,27 @@ The register method expects this arguments:
 You can also pass the consumer directly into the method.
 
 ```java
-    server.eventHandler().registerConsumer(ConnectEvent.class, (event) -> {
-       ChannelHandlerContext ctx = event.getCtx();
-       System.out.println("Server: Client connected: " + ctx.channel().remoteAddress());
-    });
+server.eventHandler().registerConsumer(ConnectEvent.class, (event) -> {
+   ChannelHandlerContext ctx = event.getCtx();
+   System.out.println("Server: Client connected: " + ctx.channel().remoteAddress());
+});
 ```
 
 Here an example to process an object which is fired via a `ReceiveEvent`.
 
 ```java
-
-    public class ReceiveConsumer implements Consumer<ReceiveEvent> {
-        @Override
-        public void onEvent(ReceiveEvent event) {
-            ChannelHandlerContext ctx = event.getCtx();
-            Object object = event.getObject();
-            System.out.println("Server: Client received: " + ctx.channel().remoteAddress() + "/" + object);
-            if(object instanceof Boolean) {
-                Boolean result = (Boolean) object;
-                System.out.println("Result is: " + result);
-            }
+public class ReceiveConsumer implements Consumer<ReceiveEvent> {
+    @Override
+    public void onEvent(ReceiveEvent event) {
+        ChannelHandlerContext ctx = event.getCtx();
+        Object object = event.getObject();
+        System.out.println("Server: Client received: " + ctx.channel().remoteAddress() + "/" + object);
+        if(object instanceof Boolean) {
+            Boolean result = (Boolean) object;
+            System.out.println("Result is: " + result);
         }
     }
-
+}
 ```
 
 
@@ -335,18 +345,18 @@ endpoint.eventHandler().registerConsumer(SampleEvent.class, (event) -> System.ou
 To create a `Serializer` implement the interface. 
 
 ```java
-    public class CustomSerializer implements Serializer {
-        
-            @Override
-            public <T> byte[] serialize(T object) {
-                // Serializer here
-            }
+public class CustomSerializer implements Serializer {
+    
+    @Override
+    public <T> byte[] serialize(T object) {
+        // Serializer here
+    }
 
-            @Override
-            public <T> T deserialize(byte[] bytes) {
-                // Deserializer here
-            }
-    } 
+    @Override
+    public <T> T deserialize(byte[] bytes) {
+        // Deserializer here
+    }
+} 
 ```
 
 ## Add as dependecy
@@ -354,25 +364,25 @@ To create a `Serializer` implement the interface.
 Add `jitpack.io` as repository. 
 
 ```java
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
+repositories {
+    maven { url 'https://jitpack.io' }
+}
 ```
 
 And add it as dependency. (e.g. `1.0` is the release-version)
 ```java
-    dependencies {
-        implementation 'com.github.BinfluxDev:binflux-netty:1.0'
-        // or use
-        compile group: 'com.github.BinfluxDev', name: 'binflux-netty', version: '1.0'
-    }
+dependencies {
+    implementation 'com.github.BinfluxDev:binflux-netty:1.0'
+    // or use
+    compile group: 'com.github.BinfluxDev', name: 'binflux-netty', version: '1.0'
+}
 ```
 
 
 ## Build from source
 
-If you want to build `binflux-netty-{version}.jar` from source, clone this repository and run `./gradlew build`. 
-The output-file will be in the directory: `/build/libs/binflux-netty-{version}.jar`
+If you want to build `binflux-netty-{version}.jar` from source, clone this repository and run `./gradlew buildBinfluxNetty`. 
+The output-file will be in the directory: `/build/libs/binflux-netty-{version}-all.jar`
 Gradle downloads the required dependencies and inserts all components into the output-file.
 If you are interested in the build task, look at [build.gradle](https://github.com/BinfluxDev/binflux-netty/blob/master/build.gradle).
 

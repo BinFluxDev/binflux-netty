@@ -5,8 +5,8 @@ import eu.binflux.netty.endpoint.client.PooledClient;
 import eu.binflux.netty.endpoint.server.EndpointServer;
 import eu.binflux.netty.endpoint.server.PooledServer;
 import eu.binflux.netty.serialization.PooledSerializer;
-import eu.binflux.netty.serialization.Serializer;
-import eu.binflux.netty.serialization.serializer.KryoSerializer;
+import eu.binflux.netty.serialization.Serialization;
+import eu.binflux.netty.serialization.serializer.KryoSerialization;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,7 +28,6 @@ public final class EndpointBuilder {
     private final AtomicInteger serverWorkerSize;
 
     private PooledSerializer pooledSerializer;
-    private Serializer serializer;
 
     private EndpointBuilder() {
         this.logging = new AtomicBoolean(false);
@@ -45,9 +44,8 @@ public final class EndpointBuilder {
         this.serverBossSize = new AtomicInteger(1);
         this.serverWorkerSize = new AtomicInteger(5);
 
-        this.pooledSerializer = new PooledSerializer(KryoSerializer.class);
+        this.pooledSerializer = new PooledSerializer(KryoSerialization.class);
 
-        this.serializer = new KryoSerializer();
     }
 
     public static EndpointBuilder newBuilder() {
@@ -93,16 +91,16 @@ public final class EndpointBuilder {
     }
 
     public <T> byte[] serialize(T object) {
-        Serializer serializer = pooledSerializer.obtain();
-        byte[] bytes = serializer.serialize(object);
-        pooledSerializer.free(serializer);
+        Serialization serialization = pooledSerializer.obtain();
+        byte[] bytes = serialization.serialize(object);
+        pooledSerializer.free(serialization);
         return bytes;
     }
 
     public <T> T deserialize(byte[] bytes) {
-        Serializer serializer = pooledSerializer.obtain();
-        T object = serializer.deserialize(bytes);
-        pooledSerializer.free(serializer);
+        Serialization serialization = pooledSerializer.obtain();
+        T object = serialization.deserialize(bytes);
+        pooledSerializer.free(serialization);
         return object;
     }
 
@@ -140,10 +138,6 @@ public final class EndpointBuilder {
 
     public int getServerBossSize() {
         return this.serverBossSize.get();
-    }
-
-    public Serializer getSerializer() {
-        return this.serializer;
     }
 
     public EndpointClient build(String host, int port) {

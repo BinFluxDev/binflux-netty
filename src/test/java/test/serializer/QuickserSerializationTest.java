@@ -6,7 +6,7 @@ import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
 import eu.binflux.netty.serialization.PooledSerializer;
-import eu.binflux.netty.serialization.serializer.FSTSerializer;
+import eu.binflux.netty.serialization.serializer.QuickserSerialization;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
-public class FSTSerializerTest {
+public class QuickserSerializationTest {
 
     public static EndpointBuilder BUILDER;
 
@@ -29,11 +29,11 @@ public class FSTSerializerTest {
 
     @BeforeClass
     public static void setupClass() {
-        System.out.println("== Test FSTSerializer Behaviour == ");
+        System.out.println("== Test QuickserSerializer Behaviour == ");
 
         BUILDER = EndpointBuilder.newBuilder()
                 .eventExecutor(5)
-                .serializer(new PooledSerializer(FSTSerializer.class));
+                .serializer(new PooledSerializer(QuickserSerialization.class));
 
         server = BUILDER.build(54321);
 
@@ -61,7 +61,7 @@ public class FSTSerializerTest {
         assertTrue(client.stop());
         assertTrue(server.stop());
         System.out.println(average.get() + " packets/sec in average");
-        System.out.println("== Finished FSTSerializer Behaviour == ");
+        System.out.println("== Finished QuickserSerializer Behaviour == ");
     }
 
     @Test

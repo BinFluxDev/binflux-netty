@@ -1,6 +1,6 @@
 package eu.binflux.netty.serialization;
 
-public interface Serializer {
+public interface Serialization {
 
     <T> byte[] serialize(T object);
 

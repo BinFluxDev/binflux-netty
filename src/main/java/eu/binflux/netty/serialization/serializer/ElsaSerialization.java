@@ -1,17 +1,17 @@
 package eu.binflux.netty.serialization.serializer;
 
 import eu.binflux.netty.exceptions.SerializerException;
-import eu.binflux.netty.serialization.Serializer;
+import eu.binflux.netty.serialization.Serialization;
 import org.mapdb.elsa.ElsaMaker;
 import org.mapdb.elsa.ElsaSerializerPojo;
 
 import java.io.*;
 
-public class ElsaSerializer implements Serializer {
+public class ElsaSerialization implements Serialization {
 
     private final ElsaSerializerPojo elsaSerializer;
 
-    public ElsaSerializer() {
+    public ElsaSerialization() {
         this.elsaSerializer = new ElsaMaker().make();
     }
 

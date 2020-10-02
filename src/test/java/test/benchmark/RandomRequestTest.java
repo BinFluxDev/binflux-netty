@@ -6,7 +6,7 @@ import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
 import eu.binflux.netty.serialization.PooledSerializer;
-import eu.binflux.netty.serialization.serializer.FSTSerializer;
+import eu.binflux.netty.serialization.serializer.FSTSerialization;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class RandomRequestTest extends AbstractBenchmark {
     public static void setupClass() {
         System.out.println("== Test RandomRequest/Sec Behaviour == ");
 
-        StaticTest.BUILDER.serializer(new PooledSerializer(FSTSerializer.class));
+        StaticTest.BUILDER.serializer(new PooledSerializer(FSTSerialization.class));
 
         server = StaticTest.BUILDER.build(54321);
 

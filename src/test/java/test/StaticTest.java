@@ -13,6 +13,7 @@ public class StaticTest {
 
     public static RandomRequest RANDOM_REQUEST;
     public static KotlinRequest KOTLIN_REQUEST;
+
     public static String testString;
     public static long testLong;
     public static int testInt;

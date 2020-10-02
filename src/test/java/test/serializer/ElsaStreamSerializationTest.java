@@ -6,7 +6,7 @@ import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
 import eu.binflux.netty.serialization.PooledSerializer;
-import eu.binflux.netty.serialization.serializer.KryoSerializer;
+import eu.binflux.netty.serialization.serializer.ElsaStreamSerialization;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
-public class KryoSerializerTest {
+public class ElsaStreamSerializationTest {
 
     public static EndpointBuilder BUILDER;
 
@@ -29,11 +29,11 @@ public class KryoSerializerTest {
 
     @BeforeClass
     public static void setupClass() {
-        System.out.println("== Test KryoSerializer Behaviour == ");
+        System.out.println("== Test JavaSerializer Behaviour == ");
 
         BUILDER = EndpointBuilder.newBuilder()
                 .eventExecutor(5)
-                .serializer(new PooledSerializer(KryoSerializer.class));
+                .serializer(new PooledSerializer(ElsaStreamSerialization.class));
 
         server = BUILDER.build(54321);
 
@@ -61,7 +61,7 @@ public class KryoSerializerTest {
         assertTrue(client.stop());
         assertTrue(server.stop());
         System.out.println(average.get() + " packets/sec in average");
-        System.out.println("== Finished KryoSerializer Behaviour == ");
+        System.out.println("== Finished JavaSerializer Behaviour == ");
     }
 
     @Test

@@ -1,15 +1,17 @@
 package eu.binflux.netty.serialization.serializer;
 
-import com.caucho.hessian.io.Hessian2Input;
-import com.caucho.hessian.io.Hessian2Output;
 import eu.binflux.netty.exceptions.SerializerException;
-import eu.binflux.netty.serialization.Serializer;
+import eu.binflux.netty.serialization.Serialization;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Serializable;
+import java.io.*;
 
-public class Hessian2Serializer implements Serializer {
+public class QuickserSerialization implements Serialization {
+
+    private final com.romix.quickser.Serialization serialization;
+
+    public QuickserSerialization() {
+        this.serialization = new com.romix.quickser.Serialization();
+    }
 
     @Override
     public <T> byte[] serialize(T object) {
@@ -17,10 +19,9 @@ public class Hessian2Serializer implements Serializer {
             if(!(object instanceof Serializable))
                 throw new SerializerException("Object doesn't implement Serializable");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            Hessian2Output output = new Hessian2Output(outputStream);
-            output.startMessage();
-            output.writeObject(object);
-            output.completeMessage();
+            DataOutputStream output = new DataOutputStream(outputStream);
+            serialization.serialize(output, object);
+            output.flush();
             output.close();
             return outputStream.toByteArray();
         } catch (Throwable e) {
@@ -33,11 +34,8 @@ public class Hessian2Serializer implements Serializer {
     public <T> T deserialize(byte[] bytes) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-            Hessian2Input input = new Hessian2Input(inputStream);
-            input.startMessage();
-            @SuppressWarnings("unchecked")
-            T object = (T) input.readObject();
-            input.completeMessage();
+            DataInputStream input = new DataInputStream(inputStream);
+            T object = (T) serialization.deserialize(input);
             input.close();
             return object;
         } catch (Exception e) {

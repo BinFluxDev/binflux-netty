@@ -1,4 +1,4 @@
-package eu.binflux.netty.protocol;
+package eu.binflux.netty.protocol.packet;
 
 import java.io.Serializable;
 

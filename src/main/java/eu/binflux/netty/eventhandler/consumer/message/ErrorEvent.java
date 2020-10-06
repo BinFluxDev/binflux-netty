@@ -1,4 +1,4 @@
-package eu.binflux.netty.eventhandler.consumer;
+package eu.binflux.netty.eventhandler.consumer.message;
 
 import eu.binflux.netty.eventhandler.ConsumerEvent;
 

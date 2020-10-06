@@ -1,7 +1,7 @@
 package eu.binflux.netty.eventhandler;
 
+import eu.binflux.netty.eventhandler.consumer.message.ErrorEvent;
 import eu.binflux.netty.exceptions.EventHandlerException;
-import eu.binflux.netty.eventhandler.consumer.ErrorEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +39,6 @@ public class EventHandler {
             return;
         }
         List<Consumer<?>> unknownConsumerList = this.consumerMap.getOrDefault(event.getClass(), new ArrayList<>());
-        if(unknownConsumerList.isEmpty() && event instanceof ErrorEvent) {
-            ((ErrorEvent) event).getThrowable().printStackTrace();
-            return;
-        }
         if(!unknownConsumerList.isEmpty()) {
             for (Consumer<?> consumer : unknownConsumerList) {
                 @SuppressWarnings("unchecked")

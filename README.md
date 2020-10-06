@@ -48,6 +48,9 @@ EndpointBuilder builder = EndpointBuilder.newBuilder();
 * `logging(boolean value)` 
     * enables/disables netty-built-in `LoggingHandler.class` (helpful for debugging)
     * default: disabled
+* `packetProtocol(boolean value)` 
+    * enables/disables built-in packet-protocol
+    * default: disabled
 * `eventExecutor(int threadPoolSize)` 
     * enables `EventExecutorGroup.class`
     * thread-pooledSerializer-size * cores

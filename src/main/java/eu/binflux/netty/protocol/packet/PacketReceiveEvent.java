@@ -1,4 +1,4 @@
-package eu.binflux.netty.protocol;
+package eu.binflux.netty.protocol.packet;
 
 import eu.binflux.netty.eventhandler.ConsumerEvent;
 import io.netty.channel.ChannelHandlerContext;

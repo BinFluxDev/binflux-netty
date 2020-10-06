@@ -3,7 +3,9 @@ package eu.binflux.netty.endpoint;
 
 import eu.binflux.netty.eventhandler.EventHandler;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
-import eu.binflux.netty.protocol.PacketReceiveConsumer;
+import eu.binflux.netty.eventhandler.consumer.message.ErrorEvent;
+import eu.binflux.netty.protocol.ErrorEventConsumer;
+import eu.binflux.netty.protocol.packet.PacketReceiveConsumer;
 
 public abstract class AbstractEndpoint implements Endpoint {
 
@@ -15,6 +17,7 @@ public abstract class AbstractEndpoint implements Endpoint {
 		this.eventHandler = new EventHandler();
 		if (endpointBuilder.isPacketProtocol())
 			eventHandler().registerConsumer(ReceiveEvent.class, new PacketReceiveConsumer(this));
+			eventHandler().registerConsumer(ErrorEvent.class, new ErrorEventConsumer());
 	}
 
 	/**

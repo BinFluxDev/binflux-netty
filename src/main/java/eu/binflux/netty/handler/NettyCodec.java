@@ -1,7 +1,7 @@
 package eu.binflux.netty.handler;
 
 import eu.binflux.netty.endpoint.AbstractEndpoint;
-import eu.binflux.netty.eventhandler.consumer.ErrorEvent;
+import eu.binflux.netty.eventhandler.consumer.message.ErrorEvent;
 import eu.binflux.netty.exceptions.SerializationException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

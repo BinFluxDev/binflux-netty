@@ -1,10 +1,10 @@
 package eu.binflux.netty.handler;
 
+import eu.binflux.netty.endpoint.AbstractEndpoint;
 import eu.binflux.netty.eventhandler.consumer.ConnectEvent;
 import eu.binflux.netty.eventhandler.consumer.DisconnectEvent;
-import eu.binflux.netty.eventhandler.consumer.ErrorEvent;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
-import eu.binflux.netty.endpoint.AbstractEndpoint;
+import eu.binflux.netty.eventhandler.consumer.message.ErrorEvent;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;

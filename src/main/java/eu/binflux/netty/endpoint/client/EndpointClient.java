@@ -2,7 +2,7 @@
 package eu.binflux.netty.endpoint.client;
 
 import eu.binflux.netty.endpoint.EndpointBuilder;
-import eu.binflux.netty.eventhandler.consumer.ErrorEvent;
+import eu.binflux.netty.eventhandler.consumer.message.ErrorEvent;
 import eu.binflux.netty.handler.NettyInitializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;

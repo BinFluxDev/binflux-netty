@@ -1,4 +1,4 @@
-package eu.binflux.netty.protocol;
+package eu.binflux.netty.protocol.packet;
 
 import eu.binflux.netty.endpoint.AbstractEndpoint;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;

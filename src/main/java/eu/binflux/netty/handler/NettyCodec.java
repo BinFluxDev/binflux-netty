@@ -2,7 +2,7 @@ package eu.binflux.netty.handler;
 
 import eu.binflux.netty.endpoint.AbstractEndpoint;
 import eu.binflux.netty.eventhandler.consumer.ErrorEvent;
-import eu.binflux.netty.exceptions.SerializerException;
+import eu.binflux.netty.exceptions.SerializationException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
@@ -29,7 +29,7 @@ public class NettyCodec extends ByteToMessageCodec<Object> {
             // Write data-content to ByteBuf
             out.writeBytes(outArray);
         } catch (Exception e) {
-            endpoint.eventHandler().handleEvent(new ErrorEvent(new SerializerException("Error while encoding:", e)));
+            endpoint.eventHandler().handleEvent(new ErrorEvent(new SerializationException("Error while encoding:", e)));
         }
     }
 
@@ -63,7 +63,7 @@ public class NettyCodec extends ByteToMessageCodec<Object> {
             // Add object to output-list
             out.add(object);
         } catch (Exception e) {
-            endpoint.eventHandler().handleEvent(new ErrorEvent(new SerializerException("Error while decoding:", e)));
+            endpoint.eventHandler().handleEvent(new ErrorEvent(new SerializationException("Error while decoding:", e)));
         }
     }
 

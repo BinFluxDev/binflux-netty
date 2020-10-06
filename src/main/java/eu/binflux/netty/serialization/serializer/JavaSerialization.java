@@ -1,6 +1,6 @@
 package eu.binflux.netty.serialization.serializer;
 
-import eu.binflux.netty.exceptions.SerializerException;
+import eu.binflux.netty.exceptions.SerializationException;
 import eu.binflux.netty.serialization.Serialization;
 
 import java.io.*;
@@ -11,7 +11,7 @@ public class JavaSerialization implements Serialization {
     public <T> byte[] serialize(T object) {
         try {
             if(!(object instanceof Serializable))
-                throw new SerializerException("Object doesn't implement Serializable");
+                throw new SerializationException("Object doesn't implement Serializable");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ObjectOutputStream output = new ObjectOutputStream(outputStream);
             output.writeObject(object);

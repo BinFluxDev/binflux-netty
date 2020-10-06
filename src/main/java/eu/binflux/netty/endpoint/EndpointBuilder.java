@@ -15,6 +15,7 @@ public final class EndpointBuilder {
 
     private final AtomicBoolean logging;
 
+    private final AtomicBoolean packetProtocol;
     private final AtomicBoolean eventExecutor;
     private final AtomicInteger eventExecutorSize;
 
@@ -32,6 +33,7 @@ public final class EndpointBuilder {
     private EndpointBuilder() {
         this.logging = new AtomicBoolean(false);
 
+        this.packetProtocol = new AtomicBoolean(false);
         this.eventExecutor = new AtomicBoolean(false);
         this.eventExecutorSize = new AtomicInteger(0);
 
@@ -54,6 +56,11 @@ public final class EndpointBuilder {
 
     public EndpointBuilder logging(boolean value) {
         this.logging.set(value);
+        return this;
+    }
+
+    public EndpointBuilder packetProtocol(boolean value) {
+        this.packetProtocol.set(value);
         return this;
     }
 
@@ -106,6 +113,10 @@ public final class EndpointBuilder {
 
     public boolean isLogging() {
         return this.logging.get();
+    }
+
+    public boolean isPacketProtocol() {
+        return this.packetProtocol.get();
     }
 
     public boolean isEventExecutor() {

@@ -2,7 +2,7 @@ package eu.binflux.netty.serialization.serializer;
 
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
-import eu.binflux.netty.exceptions.SerializerException;
+import eu.binflux.netty.exceptions.SerializationException;
 import eu.binflux.netty.serialization.Serialization;
 
 import java.io.ByteArrayInputStream;
@@ -15,7 +15,7 @@ public class HessianSerialization implements Serialization {
     public <T> byte[] serialize(T object) {
         try {
             if(!(object instanceof Serializable))
-                throw new SerializerException("Object doesn't implement Serializable");
+                throw new SerializationException("Object doesn't implement Serializable");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             HessianOutput output = new HessianOutput(outputStream);
             output.writeObject(object);

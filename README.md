@@ -17,20 +17,19 @@ This overview offers a simple step by step guide to get started with binflux-net
     * [Basic](#basic-options)
     * [IdleState](#idlestate-options)
     * [Netty](#netty-options)
-    * [Serializer](#serializer-options)
-  * [Serialization](#implemented-serialization)
-  * [Build Endpoints](#building-the-endpoints)
-  * [Server](#how-to-start-the-server)
-  * [Client](#how-to-start-the-client)
-  * [Reconnect](#reconnecting-with-endpointclient)
-  * [Channel-Pool](#connection-pooling)
+    * [Serialization](#serializer-options)
+  * [Endpoints](#building-the-endpoints)
+    * [Build Endpoints](#building-the-endpoints)
+    * [Server](#how-to-start-the-server)
+    * [Client](#how-to-start-the-client)
+    * [Reconnect](#reconnecting-with-endpointclient)
+    * [Channel-Pool](#connection-pooling)
 
 #### Events
   * [Default Events](#default-events)
   * [Register Events](#register-events)
   * [Create Events](#creating-events)
   * [Handle Events](#throwing-and-consuming-events)
-  * [Custom Serializer](#custom-serializers)
 
 #### Build and Download
   * [Download](#add-as-dependecy)  
@@ -94,39 +93,18 @@ from the server to the client, a ReadTimeout is thrown.
 If you have no idea what you are doing with this, you should leave it set by default.
 
 #### Serializer options:
-* `serializer(PooledSerializer serialization)` 
-    * sets the specific `PooledSerializer` with `Serialization`
+* `serializer(SerializerPool pool)` 
+    * sets the specific `SerializerPool` with `Serialization`
     * default: `KryoSerialization`
 
-For better performance the serializations are pooled with a `PooledSerializer`. 
+For better performance the serializations are pooled with a `SerializerPool`. 
 
 Example usage:
 ```java
-endpointBuilder.serializer(new PooledSerializer(KryoSerialization.class));
+endpointBuilder.serializer(new SerializerPool(KryoSerialization.class));
 ```
 
-## Implemented Serialization
-
-| Serialization (Class)      | Serialization (Framework) |
-|----------------------------|---------------------------|
-| `KryoSerialization`        | Kryo                      |
-| `KryoUnsafeSerialization`  | Kryo                      |
-| `JavaSerialization`        | Java I/O                  |
-| `FSTSerialization`         | fast-serialization        |
-| `FSTNoSharedSerialization` | fast-serialization        |
-| `HessianSerialization`     | Hessian                   |
-| `Hessian2Serialization`    | Hessian                   |
-| `QuickserSerialization`    | QuickSer                  |
-| `ElsaSerialization`        | Elsa                      |
-| `ElsaStreamSerialization`  | Elsa                      |
-
-Framework Links:
-* [Kryo](https://github.com/EsotericSoftware/kryo)
-* [Java Tutorial](https://docs.oracle.com/javase/tutorial/jndi/objects/serial.html#:~:text=To%20serialize%20an%20object%20means,interface%20or%20its%20subinterface%2C%20java.)
-* [fast-serialization](https://github.com/RuedigerMoeller/fast-serialization)
-* [Hessian](http://hessian.caucho.com/)
-* [QuickSer](https://github.com/romix/quickser)
-* [Elsa](http://www.mapdb.org/)
+See more: [binflux-serilization](https://github.com/BinfluxDev/binflux-serilization)
 
 ## Building the endpoints:
 
@@ -341,25 +319,6 @@ endpoint.eventHandler().handleEvent(new SampleEvent("SampleString", 100, System.
 To consume the event:
 ```java
 endpoint.eventHandler().registerConsumer(SampleEvent.class, (event) -> System.out.println(event.toString()));
-```
-
-## Custom Serializers
-
-To create a `Serializer` implement the interface. 
-
-```java
-public class CustomSerializer implements Serializer {
-    
-    @Override
-    public <T> byte[] serialize(T object) {
-        // Serializer here
-    }
-
-    @Override
-    public <T> T deserialize(byte[] bytes) {
-        // Deserializer here
-    }
-} 
 ```
 
 ## Add as dependecy

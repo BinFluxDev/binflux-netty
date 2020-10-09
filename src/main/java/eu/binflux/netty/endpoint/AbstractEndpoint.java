@@ -17,6 +17,7 @@ public abstract class AbstractEndpoint implements Endpoint {
 		this.eventHandler = new EventHandler();
 		if (endpointBuilder.isPacketProtocol())
 			eventHandler().registerConsumer(ReceiveEvent.class, new PacketReceiveConsumer(this));
+		if (endpointBuilder.isPrintErrors())
 			eventHandler().registerConsumer(ErrorEvent.class, new ErrorEventConsumer());
 	}
 
@@ -35,6 +36,5 @@ public abstract class AbstractEndpoint implements Endpoint {
 	public EventHandler eventHandler() {
 		return this.eventHandler;
 	}
-
 
 }

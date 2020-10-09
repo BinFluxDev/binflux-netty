@@ -1,6 +1,9 @@
 package eu.binflux.netty.endpoint.server;
 
 import eu.binflux.netty.endpoint.EndpointBuilder;
+import eu.binflux.netty.eventhandler.consumer.endpoint.EndpointCloseEvent;
+import eu.binflux.netty.eventhandler.consumer.endpoint.EndpointStartEvent;
+import eu.binflux.netty.eventhandler.consumer.endpoint.EndpointStopEvent;
 import eu.binflux.netty.eventhandler.consumer.message.ErrorEvent;
 import eu.binflux.netty.handler.NettyInitializer;
 import io.netty.bootstrap.ServerBootstrap;
@@ -61,11 +64,34 @@ public class EndpointServer extends AbstractServer {
     }
 
     /**
+     * Let the server bind to the given port
+     */
+    @Override
+    public boolean start() {
+        if (getPort() == -1) {
+            eventHandler().handleEvent(new ErrorEvent(new RuntimeException("port is not set")));
+            return false;
+        }
+        try {
+            // Start the server and wait for socket to be bind to the given port
+            this.channel = serverBootstrap.bind(new InetSocketAddress(getPort())).sync().channel();
+            eventHandler().handleEvent(new EndpointStartEvent());
+            return true;
+        } catch (InterruptedException e) {
+            eventHandler().handleEvent(new ErrorEvent(e));
+        }
+        return false;
+    }
+
+    /**
      * Stops the server socket.
      */
     @Override
     public boolean stop() {
         try {
+
+            eventHandler().handleEvent(new EndpointStopEvent());
+
             // unregister network-events
             eventHandler().unregisterAll();
 
@@ -83,25 +109,6 @@ public class EndpointServer extends AbstractServer {
     }
 
     /**
-     * Let the server bind to the given port
-     */
-    @Override
-    public boolean start() {
-        if (getPort() == -1) {
-            eventHandler().handleEvent(new ErrorEvent(new RuntimeException("port is not set")));
-            return false;
-        }
-        try {
-            // Start the server and wait for socket to be bind to the given port
-            this.channel = serverBootstrap.bind(new InetSocketAddress(getPort())).sync().channel();
-            return true;
-        } catch (InterruptedException e) {
-            eventHandler().handleEvent(new ErrorEvent(e));
-        }
-        return false;
-    }
-
-    /**
      * Closes the server socket.
      */
     @Override
@@ -109,6 +116,7 @@ public class EndpointServer extends AbstractServer {
         if (channel != null && channel.isOpen())
             try {
                 channel.close().sync();
+                eventHandler().handleEvent(new EndpointCloseEvent());
                 return true;
             } catch (InterruptedException e) {
                 eventHandler().handleEvent(new ErrorEvent(e));

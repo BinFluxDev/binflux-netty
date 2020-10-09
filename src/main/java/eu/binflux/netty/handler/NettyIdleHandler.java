@@ -1,8 +1,8 @@
 package eu.binflux.netty.handler;
 
-import eu.binflux.netty.eventhandler.consumer.ReadTimeoutEvent;
-import eu.binflux.netty.eventhandler.consumer.WriteTimeoutEvent;
 import eu.binflux.netty.endpoint.AbstractEndpoint;
+import eu.binflux.netty.eventhandler.consumer.timeout.ReadTimeoutEvent;
+import eu.binflux.netty.eventhandler.consumer.timeout.WriteTimeoutEvent;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleState;

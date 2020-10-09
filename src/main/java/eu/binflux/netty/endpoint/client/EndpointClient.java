@@ -2,6 +2,8 @@
 package eu.binflux.netty.endpoint.client;
 
 import eu.binflux.netty.endpoint.EndpointBuilder;
+import eu.binflux.netty.eventhandler.consumer.endpoint.EndpointStartEvent;
+import eu.binflux.netty.eventhandler.consumer.endpoint.EndpointStopEvent;
 import eu.binflux.netty.eventhandler.consumer.message.ErrorEvent;
 import eu.binflux.netty.handler.NettyInitializer;
 import io.netty.bootstrap.Bootstrap;
@@ -106,8 +108,13 @@ public class EndpointClient extends AbstractClient {
     @Override
     public boolean stop() {
         try {
+
+            eventHandler().handleEvent(new EndpointStopEvent());
+
             eventHandler().unregisterAll();
+
             group.shutdownGracefully();
+
             close();
             return true;
         } catch (Exception e) {
@@ -136,6 +143,7 @@ public class EndpointClient extends AbstractClient {
         // Start the client and wait for the connection to be established.
         try {
             this.channel = this.bootstrap.connect(new InetSocketAddress(getHost(), getPort())).sync().channel();
+            eventHandler().handleEvent(new EndpointStartEvent());
             return true;
         } catch (InterruptedException e) {
             eventHandler().handleEvent(new ErrorEvent(e));

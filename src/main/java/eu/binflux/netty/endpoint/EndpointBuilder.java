@@ -4,9 +4,8 @@ import eu.binflux.netty.endpoint.client.EndpointClient;
 import eu.binflux.netty.endpoint.client.PooledClient;
 import eu.binflux.netty.endpoint.server.EndpointServer;
 import eu.binflux.netty.endpoint.server.PooledServer;
-import eu.binflux.netty.serialization.PooledSerializer;
-import eu.binflux.netty.serialization.Serialization;
-import eu.binflux.netty.serialization.serializer.KryoSerialization;
+import eu.binflux.serializer.SerializerPool;
+import eu.binflux.serializer.serialization.KryoSerialization;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,7 +29,7 @@ public final class EndpointBuilder {
     private final AtomicInteger serverBossSize;
     private final AtomicInteger serverWorkerSize;
 
-    private PooledSerializer pooledSerializer;
+    private SerializerPool pooledSerializer;
 
     private EndpointBuilder() {
         this.logging = new AtomicBoolean(false);
@@ -49,7 +48,7 @@ public final class EndpointBuilder {
         this.serverBossSize = new AtomicInteger(1);
         this.serverWorkerSize = new AtomicInteger(5);
 
-        this.pooledSerializer = new PooledSerializer(KryoSerialization.class);
+        this.pooledSerializer = new SerializerPool(KryoSerialization.class);
 
     }
 
@@ -100,23 +99,21 @@ public final class EndpointBuilder {
         return this;
     }
 
-    public EndpointBuilder serializer(PooledSerializer pooledSerializer) {
+    public SerializerPool getPooledSerializer() {
+        return pooledSerializer;
+    }
+
+    public EndpointBuilder serializer(SerializerPool pooledSerializer) {
         this.pooledSerializer = pooledSerializer;
         return this;
     }
 
     public <T> byte[] serialize(T object) {
-        Serialization serialization = pooledSerializer.obtain();
-        byte[] bytes = serialization.serialize(object);
-        pooledSerializer.free(serialization);
-        return bytes;
+        return pooledSerializer.serialize(object);
     }
 
     public <T> T deserialize(byte[] bytes) {
-        Serialization serialization = pooledSerializer.obtain();
-        T object = serialization.deserialize(bytes);
-        pooledSerializer.free(serialization);
-        return object;
+        return pooledSerializer.deserialize(bytes);
     }
 
     public boolean isLogging() {

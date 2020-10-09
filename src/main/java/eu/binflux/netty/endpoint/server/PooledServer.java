@@ -2,6 +2,9 @@
 package eu.binflux.netty.endpoint.server;
 
 import eu.binflux.netty.endpoint.EndpointBuilder;
+import eu.binflux.netty.eventhandler.consumer.endpoint.EndpointCloseEvent;
+import eu.binflux.netty.eventhandler.consumer.endpoint.EndpointStartEvent;
+import eu.binflux.netty.eventhandler.consumer.endpoint.EndpointStopEvent;
 import eu.binflux.netty.eventhandler.consumer.message.ErrorEvent;
 import eu.binflux.netty.handler.NettyInitializer;
 import io.netty.bootstrap.ServerBootstrap;
@@ -76,6 +79,7 @@ public class PooledServer extends AbstractServer {
                 serverSocketList.add(channel);
                 channel.closeFuture().addListener((future) -> serverSocketList.remove(channel));
             }
+            eventHandler().handleEvent(new EndpointStartEvent());
             return true;
         } catch (Exception e) {
             eventHandler().handleEvent(new ErrorEvent(e));
@@ -89,6 +93,9 @@ public class PooledServer extends AbstractServer {
     @Override
     public boolean stop() {
         try {
+
+            eventHandler().handleEvent(new EndpointStopEvent());
+
             // unregister network-events
             eventHandler().unregisterAll();
 
@@ -115,6 +122,7 @@ public class PooledServer extends AbstractServer {
             // close server-channel
             serverSocketList.forEach(Channel::close);
 
+            eventHandler().handleEvent(new EndpointCloseEvent());
             return true;
         } catch (Exception e) {
             eventHandler().handleEvent(new ErrorEvent(e));

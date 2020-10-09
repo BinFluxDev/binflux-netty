@@ -1,13 +1,13 @@
-package eu.binflux.netty.eventhandler.consumer;
+package eu.binflux.netty.eventhandler.consumer.timeout;
 
 import eu.binflux.netty.eventhandler.ConsumerEvent;
 import io.netty.channel.ChannelHandlerContext;
 
-public class ReadTimeoutEvent implements ConsumerEvent {
+public class WriteTimeoutEvent implements ConsumerEvent {
 
     private ChannelHandlerContext ctx;
 
-    public ReadTimeoutEvent(ChannelHandlerContext ctx) {
+    public WriteTimeoutEvent(ChannelHandlerContext ctx) {
         this.ctx = ctx;
     }
 

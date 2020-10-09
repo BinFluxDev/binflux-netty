@@ -18,7 +18,7 @@ public class EventHandler {
 
     public <T> void registerConsumer(Class<T> eventClass, Consumer<? super T> consumer) {
         if(!(ConsumerEvent.class.isAssignableFrom(eventClass))) {
-            handleEvent(new ErrorEvent(new EventHandlerException("Registered event '" + eventClass.getSimpleName() + "' isn't instance of 'IEvent.class'!")));
+            handleEvent(new ErrorEvent(new EventHandlerException("Registered event '" + eventClass.getSimpleName() + "' isn't instance of 'ConsumerEvent.class'!")));
             return;
         }
         List<Consumer<?>> consumerList = new ArrayList<>();
@@ -35,7 +35,7 @@ public class EventHandler {
 
     public <T> void handleEvent(T event) {
         if(!(ConsumerEvent.class.isAssignableFrom(event.getClass()))) {
-            handleEvent(new ErrorEvent(new EventHandlerException("Handled event '" + event.getClass().getSimpleName() + "' isn't instance of 'IEvent.class'!")));
+            handleEvent(new ErrorEvent(new EventHandlerException("Handled event '" + event.getClass().getSimpleName() + "' isn't instance of 'ConsumerEvent.class'!")));
             return;
         }
         List<Consumer<?>> unknownConsumerList = this.consumerMap.getOrDefault(event.getClass(), new ArrayList<>());

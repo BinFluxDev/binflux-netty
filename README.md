@@ -201,21 +201,31 @@ server.start();
 The event system is completely `Consumer<T>` based. There are some default events:
 
 * `ConnectEvent`
-    * server: new client connects 
-    * client: client connects to server
+    * server: client connects 
+    * client: client connects
 * `DisconnectEvent`
     * server: client disconnects (server-side)
     * client: client disconnects (client-side)
 * `ReceiveEvent`
-    * server: receives new object from client
-    * client: receives new object from server 
+    * server: receives object from client
+    * client: receives object from server 
 * `ErrorEvent`
-    * server: somewhere an error was thrown
-    * client: somewhere an error was thrown
+    * server: exception occured
+    * client: exception occured
 * `ReadTimeoutEvent` (only client-side)
-    * client: somewhere an error was thrown
+    * client: read-timeout
 * `WriteTimeoutEvent` (only client-side)
-    * client: somewhere an error was thrown
+    * client: write-timeout 
+    
+* `EndpointStartEvent`
+    * server: started
+    * client: started
+* `EndpointStopEvent`
+    * server: stopped
+    * client: stopped
+* `EndpointClosedEvent`
+    * server: closed
+    * client: closed
 
 
 ## Register Events

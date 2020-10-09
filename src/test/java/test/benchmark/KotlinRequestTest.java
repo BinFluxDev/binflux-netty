@@ -5,8 +5,8 @@ import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
 import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
-import eu.binflux.netty.serialization.PooledSerializer;
-import eu.binflux.netty.serialization.serializer.FSTSerialization;
+import eu.binflux.serializer.SerializerPool;
+import eu.binflux.serializer.serialization.FSTSerialization;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class KotlinRequestTest extends AbstractBenchmark {
     public static void setupClass() {
         System.out.println("== Test KotlinRequest/Sec Behaviour == ");
 
-        StaticTest.BUILDER.serializer(new PooledSerializer(FSTSerialization.class));
+        StaticTest.BUILDER.serializer(new SerializerPool(FSTSerialization.class));
 
         server = StaticTest.BUILDER.build(54321);
 

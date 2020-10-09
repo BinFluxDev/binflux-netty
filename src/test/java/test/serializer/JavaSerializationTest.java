@@ -5,8 +5,8 @@ import eu.binflux.netty.endpoint.EndpointBuilder;
 import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
-import eu.binflux.netty.serialization.PooledSerializer;
-import eu.binflux.netty.serialization.serializer.JavaSerialization;
+import eu.binflux.serializer.SerializerPool;
+import eu.binflux.serializer.serialization.JavaSerialization;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class JavaSerializationTest {
 
         BUILDER = EndpointBuilder.newBuilder()
                 .eventExecutor(5)
-                .serializer(new PooledSerializer(JavaSerialization.class));
+                .serializer(new SerializerPool(JavaSerialization.class));
 
         server = BUILDER.build(54321);
 

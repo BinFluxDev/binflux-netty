@@ -5,8 +5,8 @@ import eu.binflux.netty.endpoint.EndpointBuilder;
 import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
-import eu.binflux.netty.serialization.PooledSerializer;
-import eu.binflux.netty.serialization.serializer.Hessian2Serialization;
+import eu.binflux.serializer.SerializerPool;
+import eu.binflux.serializer.serialization.Hessian2Serialization;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class Hessian2SerializationTest {
 
         BUILDER = EndpointBuilder.newBuilder()
                 .eventExecutor(5)
-                .serializer(new PooledSerializer(Hessian2Serialization.class));
+                .serializer(new SerializerPool(Hessian2Serialization.class));
 
         server = BUILDER.build(54321);
 

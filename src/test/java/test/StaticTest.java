@@ -20,7 +20,8 @@ public class StaticTest {
     public static byte[] testBytes;
 
     static {
-        BUILDER = EndpointBuilder.newBuilder().eventExecutor(5);
+        BUILDER = EndpointBuilder.newBuilder()
+                .eventExecutor(10);
 
         Random random = new Random();
         testBytes = new byte[1000];

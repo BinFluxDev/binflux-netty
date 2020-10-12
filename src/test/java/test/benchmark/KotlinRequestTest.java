@@ -29,7 +29,8 @@ public class KotlinRequestTest extends AbstractBenchmark {
     public static void setupClass() {
         System.out.println("== Test KotlinRequest/Sec Behaviour == ");
 
-        StaticTest.BUILDER.serializer(new SerializerPool(FSTSerialization.class));
+        StaticTest.BUILDER
+                .serializer(new SerializerPool(FSTSerialization.class));
 
         server = StaticTest.BUILDER.build(54321);
 
@@ -43,7 +44,8 @@ public class KotlinRequestTest extends AbstractBenchmark {
             }
         });
 
-        client = StaticTest.BUILDER.build("localhost", 54321, 5);
+        client = StaticTest.BUILDER
+                .build("localhost", 54321, 5);
 
         average = new AtomicInteger();
         counter = new AtomicInteger();

@@ -5,10 +5,12 @@ import eu.binflux.netty.eventhandler.consumer.ConnectEvent;
 import eu.binflux.netty.eventhandler.consumer.DisconnectEvent;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
 import eu.binflux.netty.eventhandler.consumer.message.ErrorEvent;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 
+@ChannelHandler.Sharable
 public class NettyHandler extends ChannelInboundHandlerAdapter {
 
     final AbstractEndpoint endpoint;

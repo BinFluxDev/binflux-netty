@@ -14,10 +14,13 @@ import io.netty.util.concurrent.EventExecutorGroup;
 public class NettyInitializer extends ChannelInitializer<SocketChannel> {
 
     private final AbstractEndpoint endpoint;
+    private final NettyHandler nettyHandler;
     private final EventExecutorGroup executorGroup;
 
     public NettyInitializer(AbstractEndpoint endpoint) {
         this.endpoint = endpoint;
+
+        this.nettyHandler = new NettyHandler(endpoint);
 
         // Initialize EventExecutorGroup if execution is enabled
         if (endpoint.builder().isEventExecutor())
@@ -52,8 +55,8 @@ public class NettyInitializer extends ChannelInitializer<SocketChannel> {
         // Add the business-logic handler. (async or async)
         // And let it execute by DefaultEventExecutorGroup if is set
         if (endpoint.builder().isEventExecutor())
-            pipeline.addLast(executorGroup, "netty-handler", new NettyHandler(endpoint));
+            pipeline.addLast(executorGroup, "netty-handler", this.nettyHandler);
         else
-            pipeline.addLast("netty-handler", new NettyHandler(endpoint));
+            pipeline.addLast("netty-handler", this.nettyHandler);
     }
 }

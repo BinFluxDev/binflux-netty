@@ -28,7 +28,7 @@ dependencies {
     compile 'com.github.BinfluxDev:binflux-serialization:1.1.2-release'
 }
 
-task buildBinfluxNetty(type: Jar) {
+task buildNetty(type: Jar) {
     baseName = project.name + '-all'
     from {
         configurations.compile.collect {

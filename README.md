@@ -32,12 +32,12 @@ This overview offers a simple step by step guide to get started with binflux-net
   * [Handle Events](#throwing-and-consuming-events)
 
 #### Build and Download
-  * [Download](#add-as-dependecy)  
+  * [Download](#add-as-dependency)  
   * [Build From Source](#build-from-source)
 
 
 ## What is the EndpointBuilder
-`EndpointBuilder.class` - passes options to endpoints. To get a new instance:
+`EndpointBuilder` passes options to endpoints. Create new Builder-instance:
 
 ```java
 EndpointBuilder builder = EndpointBuilder.newBuilder();
@@ -104,34 +104,34 @@ Example usage:
 endpointBuilder.serializer(new SerializerPool(KryoSerialization.class));
 ```
 
-See more: [binflux-serilization](https://github.com/BinfluxDev/binflux-serilization)
+See more about serialization: [binflux-serilization](https://github.com/BinfluxDev/binflux-serilization)
 
 ## Building the endpoints:
 
 To build the client:
 * `build(String host, int port)`
-    * Endpoint: `EndpointClient` (extends `AbstractClient`)
+    * Endpoint: `EndpointClient` (`extends AbstractClient`)
 * `build(String host, int port, int poolSize)`
-    * Endpoint: `PooledClient` (extends `AbstractClient`)
+    * Endpoint: `PooledClient` (`extends AbstractClient`)
     
 To build the server:
 * `build(int port)`
-    * Endpoint: `EndpointServer` (extends `AbstractServer`)
+    * Endpoint: `EndpointServer` (`extends AbstractServer`)
 * `build(int port, int poolSize)`
-    * Endpoint: `PooledServer` (extends `AbstractServer`)
+    * Endpoint: `PooledServer` (`extends AbstractServer`)
 
 ## How to start the server
 
 To start the `EndpointServer` call`start()`. 
 
 ```java
-    EndpointServer server = builder.build(54321);
-    server.start();
+EndpointServer server = builder.build(54321);
+server.start();
 ```
 
 ## How to start the client
 
-The `EndpointClient` works quite similar to the `EndpointServer`, just call `start()`.
+To start the `EndpointClient` call `start()`.
 
 ```java
 EndpointClient client = builder.build("localhost", 54321);
@@ -201,36 +201,29 @@ server.start();
 The event system is completely `Consumer<T>` based. There are some default events:
 
 * `ConnectEvent`
-    * server: client connects 
-    * client: client connects
+    * server/client: channel connects 
 * `DisconnectEvent`
-    * server: client disconnects (server-side)
-    * client: client disconnects (client-side)
+    * server/client: channel disconnects
 * `ReceiveEvent`
-    * server: receives object from client
-    * client: receives object from server 
+    * server/client: receives object from client/server
 * `ErrorEvent`
-    * server: exception occured
-    * client: exception occured
-* `ReadTimeoutEvent` (only client-side)
+    * server/client: exception occured
+* `ReadTimeoutEvent` 
     * client: read-timeout
-* `WriteTimeoutEvent` (only client-side)
+* `WriteTimeoutEvent`
     * client: write-timeout 
     
 * `EndpointStartEvent`
-    * server: started
-    * client: started
+    * server/client: started
 * `EndpointStopEvent`
-    * server: stopped
-    * client: stopped
+    * server/client: stopped
 * `EndpointClosedEvent`
-    * server: closed
-    * client: closed
+    * server/client: closed
 
 
 ## Register Events
 
-To register an `ConsumerEvent` by using a `Consumer<ConnectEvent>`:
+Register an `ConsumerEvent` by using a `Consumer<ConnectEvent>`:
 
 ```java
 public class ConnectionConsumer implements Consumer<ConnectEvent> {
@@ -242,16 +235,16 @@ public class ConnectionConsumer implements Consumer<ConnectEvent> {
 }
 ```
 
-To register an event to an endpoint
+Register an event to an endpoint:
 
 ```java
 server.eventHandler().registerConsumer(ConnectEvent.class, new ConnectionConsumer());
 ```
 
-The register method expects this arguments:
+Syntax of `registerConsumer`:
 * `registerConsumer(Class<? implements ConsumerEvent> class, Consumer<ConsumerEvent> consumer)`
 
-You can also pass the consumer directly into the method.
+Pass consumer directly into method:
 
 ```java
 server.eventHandler().registerConsumer(ConnectEvent.class, (event) -> {
@@ -260,7 +253,7 @@ server.eventHandler().registerConsumer(ConnectEvent.class, (event) -> {
 });
 ```
 
-Here an example to process an object which is fired via a `ReceiveEvent`.
+Example-consumer of `ReceiveEvent`:
 
 ```java
 public class ReceiveConsumer implements Consumer<ReceiveEvent> {
@@ -319,19 +312,19 @@ public class SampleEvent implements ConsumerEvent {
 
 ## Throwing and Consuming Events
 
-To call the consumers of the event, you can pass the event to the `EventHandler` in an `AbstractEndpoint`.
+To call the consumers of the event, you can pass the event to the `EventHandler` in an `Endpoint`.
 
-To throw the event:
+Throw events:
 ```java
 endpoint.eventHandler().handleEvent(new SampleEvent("SampleString", 100, System.currentTimeMillis()));
 ```
 
-To consume the event:
+Consume/Register events:
 ```java
 endpoint.eventHandler().registerConsumer(SampleEvent.class, (event) -> System.out.println(event.toString()));
 ```
 
-## Add as dependecy
+## Add as dependency
 
 Add `jitpack.io` as repository. 
 
@@ -345,16 +338,13 @@ And add it as dependency. (e.g. `1.0` is the release-version)
 ```java
 dependencies {
     implementation 'com.github.BinfluxDev:binflux-netty:1.0'
-    // or use
-    compile group: 'com.github.BinfluxDev', name: 'binflux-netty', version: '1.0'
 }
 ```
 
 
 ## Build from source
 
-If you want to build `binflux-netty-{version}.jar` from source, clone this repository and run `./gradlew buildBinfluxNetty`. 
-The output-file will be in the directory: `/build/libs/binflux-netty-{version}-all.jar`
-Gradle downloads the required dependencies and inserts all components into the output-file.
-If you are interested in the build task, look at [build.gradle](https://github.com/BinfluxDev/binflux-netty/blob/master/build.gradle).
-
+* Clone repository
+* Run `./gradlew buildNetty`
+* Output `/build/libs/binflux-netty-{version}-all.jar`
+* Build task [build.gradle](https://github.com/BinfluxDev/binflux-netty/blob/master/build.gradle)

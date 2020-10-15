@@ -215,6 +215,8 @@ The event system is completely `Consumer<T>` based. There are some default event
     
 * `EndpointStartEvent`
     * server/client: started
+* `EndpointInitializeEvent`
+    * server/client: initialized
 * `EndpointStopEvent`
     * server/client: stopped
 * `EndpointClosedEvent`

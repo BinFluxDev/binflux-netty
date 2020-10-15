@@ -30,6 +30,11 @@ public interface Endpoint {
     boolean close();
 
     /**
+     * @return initializes the Endpoint and returns true if was successful
+     */
+    boolean initialize();
+
+    /**
      * @return The Endpoint-type. CLIENT or SERVER
      */
     EndpointType endpointType();

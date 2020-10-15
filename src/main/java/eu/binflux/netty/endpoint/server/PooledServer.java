@@ -162,7 +162,7 @@ public class PooledServer extends AbstractServer {
     /**
      * Sets the poolSize of the server
      */
-    public void setPoolSize(int port, int poolSize) {
+    public void setPoolSize(int poolSize) {
         if(poolSize > 0)
             this.poolSize = poolSize;
     }

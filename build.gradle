@@ -14,7 +14,6 @@ repositories {
 }
 
 dependencies {
-
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'com.carrotsearch', name: 'junit-benchmarks', version: '0.7.2'
 
@@ -47,4 +46,15 @@ compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+
+task buildAll(type: Jar) {
+    baseName = project.name + '-all'
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    with jar
 }

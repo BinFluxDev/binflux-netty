@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'eu.binflux'
-version '1.3.2-release'
+version '1.3.3-release'
 
 repositories {
     mavenCentral()
@@ -46,15 +46,4 @@ compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-}
-
-
-task buildAll(type: Jar) {
-    baseName = project.name + '-all'
-    from {
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
-    with jar
 }

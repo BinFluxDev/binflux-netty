@@ -332,14 +332,14 @@ Add `jitpack.io` as repository.
 
 ```java
 repositories {
-    maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.pkg.github.com/BinfluxDev/binflux-netty' }
 }
 ```
 
 And add it as dependency. (e.g. `1.0` is the release-version)
 ```java
 dependencies {
-    implementation 'com.github.BinfluxDev:binflux-netty:1.0'
+    compile 'eu.binflux:binflux-netty:1.0'
 }
 ```
 
@@ -347,6 +347,6 @@ dependencies {
 ## Build from source
 
 * Clone repository
-* Run `./gradlew buildNetty`
+* Run `./gradlew buildApp`
 * Output `/build/libs/binflux-netty-{version}-all.jar`
 * Build task [build.gradle](https://github.com/BinfluxDev/binflux-netty/blob/master/build.gradle)

@@ -328,7 +328,7 @@ endpoint.eventHandler().registerConsumer(SampleEvent.class, (event) -> System.ou
 
 ## Add as dependency
 
-Add `jitpack.io` as repository. 
+Add `repo.levenproxy.eu` as repository. 
 
 ```java
 repositories {

@@ -332,7 +332,7 @@ Add `jitpack.io` as repository.
 
 ```java
 repositories {
-    maven { url 'https://maven.pkg.github.com/BinfluxDev/binflux-netty' }
+    maven { url 'https://repo.levenproxy.eu/releases' }
 }
 ```
 

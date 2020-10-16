@@ -1,23 +1,8 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id 'maven-publish'
 }
-
-repositories {
-    mavenCentral()
-    maven { url 'https://jitpack.io/' }
-}
-
-task buildApp(type: Jar) {
-    baseName = project.name + '-all'
-    from {
-        configurations.compile.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
-    with jar
-}
-
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
@@ -28,13 +13,45 @@ compileTestKotlin {
         jvmTarget = "1.8"
     }
 }
+task buildApp(type: Jar) {
+    baseName = project.name + '-all'
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    with jar
+}
+publishing {
+    repositories {
+        maven {
+            name = 'binflux-repository'
+            url = 'http://repo.levenproxy.eu/releases'
+            credentials {
+                username = System.getenv('REPO_USER')
+                password = System.getenv('REPO_TOKEN')
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io/' }
+    maven { url 'http://repo.levenproxy.eu/releases' }
+}
 
 dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'com.carrotsearch', name: 'junit-benchmarks', version: '0.7.2'
 
-    compile 'com.github.BinfluxDev:binflux-serialization:1.1.2-release'
+    compile 'eu.binflux:binflux-serialization:1.1.4-release'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 

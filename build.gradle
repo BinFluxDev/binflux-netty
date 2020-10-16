@@ -1,33 +1,22 @@
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id 'maven-publish'
 }
-
-group 'eu.binflux'
-version '1.3.3-release'
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
     maven {
-        url "https://jitpack.io"
+        url = uri("https://maven.pkg.github.com/BinfluxDev/binflux-serialization")
+        credentials {
+            username = 'Koboo'
+            password = System.getenv('GITHUB_TOKEN')
+        }
     }
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'com.carrotsearch', name: 'junit-benchmarks', version: '0.7.2'
-
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
-    compile 'io.netty:netty-buffer:4.1.51.Final'
-    compile 'io.netty:netty-transport:4.1.51.Final'
-    compile 'io.netty:netty-transport-native-epoll:4.1.51.Final'
-    compile 'io.netty:netty-handler:4.1.51.Final'
-
-    compile 'com.github.BinfluxDev:binflux-serialization:1.1.2-release'
-}
-
-task buildNetty(type: Jar) {
+task buildApp(type: Jar) {
     baseName = project.name + '-all'
     from {
         configurations.compile.collect {
@@ -47,3 +36,37 @@ compileTestKotlin {
         jvmTarget = "1.8"
     }
 }
+publishing {
+    repositories {
+        maven {
+            url = uri("https://maven.pkg.github.com/BinfluxDev/" + project.name)
+            credentials {
+                username = 'Koboo'
+                password = System.getenv('GITHUB_TOKEN')
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+dependencies {
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'com.carrotsearch', name: 'junit-benchmarks', version: '0.7.2'
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    compile 'io.netty:netty-buffer:4.1.51.Final'
+    compile 'io.netty:netty-transport:4.1.51.Final'
+    compile 'io.netty:netty-transport-native-epoll:4.1.51.Final'
+    compile 'io.netty:netty-handler:4.1.51.Final'
+
+    compile 'eu.binflux:binflux-serialization:1.1.2-release'
+}
+
+group 'eu.binflux'
+version '1.3.3-release'

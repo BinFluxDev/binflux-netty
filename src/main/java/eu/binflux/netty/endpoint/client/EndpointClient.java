@@ -9,6 +9,7 @@ import eu.binflux.netty.handler.NettyInitializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.epoll.*;
@@ -18,6 +19,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class EndpointClient extends AbstractClient {
 
@@ -144,6 +146,7 @@ public class EndpointClient extends AbstractClient {
         try {
             this.channel = this.bootstrap.connect(new InetSocketAddress(getHost(), getPort())).sync().channel();
             eventHandler().handleEvent(new EndpointStartEvent());
+            this.channel.closeFuture().addListener((ChannelFuture future) -> future.channel().eventLoop().schedule((Runnable) this::start, 10, TimeUnit.SECONDS));
             return true;
         } catch (InterruptedException e) {
             eventHandler().handleEvent(new ErrorEvent(e));

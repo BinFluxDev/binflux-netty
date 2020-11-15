@@ -42,7 +42,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'com.carrotsearch', name: 'junit-benchmarks', version: '0.7.2'
 
-    compile 'eu.binflux:binflux-serialization:1.1.+'
+    compile 'eu.binflux:binflux-serialization:1.+'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
@@ -54,4 +54,4 @@ dependencies {
 }
 
 group 'eu.binflux'
-version '1.3.6-release'
+version '1.4'

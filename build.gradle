@@ -41,17 +41,15 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'com.carrotsearch', name: 'junit-benchmarks', version: '0.7.2'
+    testCompile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    compile 'eu.binflux:binflux-serialization:1.+'
+    compile 'eu.binflux:binflux-serialization:1.2-release'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    compile 'io.netty:netty-buffer:4.1.+'
-    compile 'io.netty:netty-transport:4.1.+'
-    compile 'io.netty:netty-transport-native-epoll:4.1.+'
-    compile 'io.netty:netty-handler:4.1.+'
+    compile 'io.netty:netty-all:4.1.54.Final'
 
 }
 
 group 'eu.binflux'
-version '1.4'
+version '1.4.1'

@@ -1,22 +1,11 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
     id 'maven-publish'
-}
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
 publishing {
     repositories {
         maven {
-            name = 'binflux-repository'
+            name = 'binflux'
             url = 'http://repo.levenproxy.eu/releases'
             credentials {
                 username = System.getenv('REPO_USER')
@@ -33,7 +22,6 @@ publishing {
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io/' }
     maven { url 'http://repo.levenproxy.eu/releases' }
 }
 
@@ -41,15 +29,11 @@ dependencies {
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'com.carrotsearch', name: 'junit-benchmarks', version: '0.7.2'
-    testCompile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    compile 'eu.binflux:binflux-serialization:1.2-release'
-
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-
-    compile 'io.netty:netty-all:4.1.54.Final'
+    compile 'eu.binflux:binflux-serialization:1.1.8'
+    compile 'io.netty:netty-all:4.1.55.Final'
 
 }
 
 group 'eu.binflux'
-version '1.4.1'
+version '1.4.2'

@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class KotlinRequestTest extends AbstractBenchmark {
+public class DataRequestTest extends AbstractBenchmark {
 
     public static AbstractServer server;
     public static AbstractClient client;
@@ -35,11 +35,11 @@ public class KotlinRequestTest extends AbstractBenchmark {
         server = StaticTest.BUILDER.build(54321);
 
         server.eventHandler().registerConsumer(ReceiveEvent.class, event -> {
-            if(event.getObject() instanceof KotlinRequest) {
-                KotlinRequest request = (KotlinRequest) event.getObject();
-                assertEquals(request.getTestString(), StaticTest.testString);
-                assertEquals(request.getTestLong(), StaticTest.testLong);
-                assertEquals(request.getTestInt(), StaticTest.testInt);
+            if(event.getObject() instanceof DataRequest) {
+                DataRequest request = (DataRequest) event.getObject();
+                assertEquals(request.getString(), StaticTest.testString);
+                assertEquals(request.gettLong(), StaticTest.testLong);
+                assertEquals(request.gettInt(), StaticTest.testInt);
                 counter.getAndIncrement();
             }
         });

@@ -1,7 +1,7 @@
 package test;
 
 import eu.binflux.netty.endpoint.EndpointBuilder;
-import test.benchmark.KotlinRequest;
+import test.benchmark.DataRequest;
 import test.benchmark.RandomRequest;
 
 import java.util.Random;
@@ -12,7 +12,7 @@ public class StaticTest {
     public static EndpointBuilder BUILDER;
 
     public static RandomRequest RANDOM_REQUEST;
-    public static KotlinRequest KOTLIN_REQUEST;
+    public static DataRequest DATA_REQUEST;
 
     public static String testString;
     public static long testLong;
@@ -33,7 +33,7 @@ public class StaticTest {
 
         RANDOM_REQUEST = new RandomRequest(testString, testLong, testBytes);
 
-        KOTLIN_REQUEST = new KotlinRequest(testString, testLong, testInt);
+        DATA_REQUEST = new DataRequest(testString, testLong, testInt);
     }
 
     public static int getPacketsPerSec(int amount, long time) {

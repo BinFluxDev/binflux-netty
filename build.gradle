@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'junit', name: 'junit', version: '4.13.1'
     testCompile group: 'com.carrotsearch', name: 'junit-benchmarks', version: '0.7.2'
 
     compile 'eu.binflux:binflux-serialization:1.1.8'

@@ -92,9 +92,6 @@ public class EndpointServer extends AbstractServer {
 
             eventHandler().handleEvent(new EndpointStopEvent());
 
-            // unregister network-events
-            eventHandler().unregisterAll();
-
             // shutdown eventloop-groups
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

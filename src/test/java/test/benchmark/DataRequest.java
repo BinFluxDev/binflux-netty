@@ -1,6 +1,8 @@
 package test.benchmark;
 
-public class DataRequest {
+import java.io.Serializable;
+
+public class DataRequest implements Serializable {
 
     private final String string;
     private final long tLong;

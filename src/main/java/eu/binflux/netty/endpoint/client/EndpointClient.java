@@ -26,7 +26,7 @@ public class EndpointClient extends AbstractClient {
     private final ExecutorService executor;
 
     private final EventLoopGroup group;
-    private Bootstrap bootstrap;
+    private final Bootstrap bootstrap;
     private Channel channel;
 
     public EndpointClient(EndpointBuilder endpointBuilder, String host, int port) {
@@ -112,8 +112,6 @@ public class EndpointClient extends AbstractClient {
         try {
 
             eventHandler().handleEvent(new EndpointStopEvent());
-
-            eventHandler().unregisterAll();
 
             group.shutdownGracefully();
 

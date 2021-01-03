@@ -45,7 +45,7 @@ public class DataRequestTest extends AbstractBenchmark {
         });
 
         client = StaticTest.BUILDER
-                .build("localhost", 54321, 5);
+                .build("localhost", 54321);
 
         average = new AtomicInteger();
         counter = new AtomicInteger();
@@ -69,13 +69,13 @@ public class DataRequestTest extends AbstractBenchmark {
         final long start = System.nanoTime();
         int amount = 5_000;
         for (int i = 0; i < amount; i++) {
-            client.send(StaticTest.KOTLIN_REQUEST);
+            client.send(StaticTest.DATA_REQUEST);
         }
         final long end = System.nanoTime();
         final long time = (end - start);
         int packetsPerSec = StaticTest.getPacketsPerSec(amount, time);
         StaticTest.adjustAverage(average, packetsPerSec);
-        Thread.sleep(5000);
+        Thread.sleep(5_000);
         assertEquals(amount, counter.get());
         System.out.println(amount + "/" + counter.get() + " successful in " + (time * (1 / 1000000000f)) + " seconds");
         System.out.println(packetsPerSec + " packets/sec");

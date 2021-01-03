@@ -95,9 +95,10 @@ public class PooledClient extends AbstractClient {
     public boolean stop() {
         try {
             eventHandler().handleEvent(new EndpointStopEvent());
-            eventHandler().unregisterAll();
+
             activeConnectionSet.forEach(Channel::close);
             freeConnectionDeque.forEach(Channel::close);
+
             eventLoopGroup.shutdownGracefully();
             return true;
         } catch (Exception e) {

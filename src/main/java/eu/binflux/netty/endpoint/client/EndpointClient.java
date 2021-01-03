@@ -144,7 +144,7 @@ public class EndpointClient extends AbstractClient {
         try {
             this.channel = this.bootstrap.connect(new InetSocketAddress(getHost(), getPort())).sync().channel();
             eventHandler().handleEvent(new EndpointStartEvent());
-            this.channel.closeFuture().addListener((ChannelFuture future) -> future.channel().eventLoop().schedule((Runnable) this::start, 10, TimeUnit.SECONDS));
+            this.channel.closeFuture().addListener((ChannelFuture future) -> future.channel().eventLoop().schedule((Runnable) this::start, 5, TimeUnit.SECONDS));
             return true;
         } catch (InterruptedException e) {
             eventHandler().handleEvent(new ErrorEvent(e));

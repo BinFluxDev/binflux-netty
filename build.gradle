@@ -31,7 +31,7 @@ dependencies {
     testCompile group: 'com.carrotsearch', name: 'junit-benchmarks', version: '0.7.2'
 
     compile 'eu.binflux:binflux-serialization:1.1.8'
-    compile 'io.netty:netty-all:4.1.56.Final'
+    compile 'io.netty:netty-all:4.1.57.Final'
 
 }
 

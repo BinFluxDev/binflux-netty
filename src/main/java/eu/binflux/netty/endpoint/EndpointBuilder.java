@@ -4,8 +4,8 @@ import eu.binflux.netty.endpoint.client.EndpointClient;
 import eu.binflux.netty.endpoint.client.PooledClient;
 import eu.binflux.netty.endpoint.server.EndpointServer;
 import eu.binflux.netty.endpoint.server.PooledServer;
-import eu.binflux.serializer.SerializerPool;
-import eu.binflux.serializer.serialization.KryoSerialization;
+import eu.binflux.serial.core.JavaSerialization;
+import eu.binflux.serial.core.SerializerPool;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,7 +48,7 @@ public final class EndpointBuilder {
         this.serverBossSize = new AtomicInteger(1);
         this.serverWorkerSize = new AtomicInteger(5);
 
-        this.pooledSerializer = new SerializerPool(KryoSerialization.class);
+        this.pooledSerializer = new SerializerPool(JavaSerialization.class);
 
     }
 

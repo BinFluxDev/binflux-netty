@@ -5,8 +5,8 @@ import com.carrotsearch.junitbenchmarks.AbstractBenchmark;
 import eu.binflux.netty.endpoint.client.AbstractClient;
 import eu.binflux.netty.endpoint.server.AbstractServer;
 import eu.binflux.netty.eventhandler.consumer.ReceiveEvent;
-import eu.binflux.serializer.SerializerPool;
-import eu.binflux.serializer.serialization.FSTSerialization;
+import eu.binflux.serial.core.SerializerPool;
+import eu.binflux.serial.fst.FSTSerialization;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,8 +14,7 @@ import test.StaticTest;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class DataRequestTest extends AbstractBenchmark {
 

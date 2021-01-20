@@ -30,10 +30,14 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.13.1'
     testCompile group: 'com.carrotsearch', name: 'junit-benchmarks', version: '0.7.2'
 
-    compile 'eu.binflux:binflux-serialization:1.1.8'
-    compile 'io.netty:netty-all:4.1.58.Final'
+    testCompile group: 'eu.binflux', name: 'serial-elsa', version: '1.2.1'
+    testCompile group: 'eu.binflux', name: 'serial-fst', version: '1.2.1'
+    testCompile group: 'eu.binflux', name: 'serial-hessian', version: '1.2.1'
+    testCompile group: 'eu.binflux', name: 'serial-kryo', version: '1.2.1'
 
+    compile group: 'eu.binflux', name: 'serial-core', version: '1.2.1'
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.58.Final'
 }
 
 group 'eu.binflux'
-version '1.4.5'
+version '1.5.1'

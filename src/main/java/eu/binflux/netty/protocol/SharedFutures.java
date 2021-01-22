@@ -1,9 +1,6 @@
 package eu.binflux.netty.protocol;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -53,6 +50,15 @@ public class SharedFutures {
     public static <T> Map.Entry<String, CompletableFuture<HashSet<T>>> generateSetFuture() {
         String futureId = createFutureId();
         CompletableFuture<HashSet<T>> future = new CompletableFuture<>();
+        addFuture(futureId, future);
+        future.whenComplete((t, e) -> removeFuture(futureId));
+        return new AbstractMap.SimpleEntry<>(futureId, future);
+    }
+
+
+    public static <T> Map.Entry<String, CompletableFuture<List<T>>> generateListFuture() {
+        String futureId = createFutureId();
+        CompletableFuture<List<T>> future = new CompletableFuture<>();
         addFuture(futureId, future);
         future.whenComplete((t, e) -> removeFuture(futureId));
         return new AbstractMap.SimpleEntry<>(futureId, future);

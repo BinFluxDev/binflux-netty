@@ -39,4 +39,4 @@ dependencies {
 }
 
 group 'eu.binflux'
-version '1.5.2'
+version '1.5.4'

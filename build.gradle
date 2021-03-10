@@ -35,7 +35,7 @@ dependencies {
     testCompile group: 'eu.binflux', name: 'serial-kryo', version: '1.2.1'
 
     compile group: 'eu.binflux', name: 'serial-core', version: '1.2.1'
-    compile group: 'io.netty', name: 'netty-all', version: '4.1.58.Final'
+    compile group: 'io.netty', name: 'netty-all', version: '4.1.60.Final'
 }
 
 group 'eu.binflux'

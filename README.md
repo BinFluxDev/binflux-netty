@@ -332,7 +332,7 @@ Add `repo.levenproxy.eu` as repository.
 
 ```java
 repositories {
-    maven { url 'https://repo.levenproxy.eu/releases' }
+    maven { url 'https://repo.koboo.eu/releases' }
 }
 ```
 
